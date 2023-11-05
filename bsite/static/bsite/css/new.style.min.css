@@ -3,7 +3,7 @@
 @font-face {
     font-family: Gilroy;
     font-display: swap;
-    src: url(../fonts/Gilroy-Black.woff2) format("woff2");
+    src: url(../../fonts/Gilroy-Black.woff2) format("woff2");
     font-weight: 900;
     font-style: normal
 }
@@ -11,7 +11,7 @@
 @font-face {
     font-family: Gilroy;
     font-display: swap;
-    src: url(../fonts/Gilroy-Bold.woff2) format("woff2");
+    src: url(../../fonts/Gilroy-Bold.woff2) format("woff2");
     font-weight: 700;
     font-style: normal
 }
@@ -19,7 +19,7 @@
 @font-face {
     font-family: Gilroy;
     font-display: swap;
-    src: url(../fonts/Gilroy-ExtraBold.woff2) format("woff2");
+    src: url(../../fonts/Gilroy-ExtraBold.woff2) format("woff2");
     font-weight: 800;
     font-style: normal
 }
@@ -27,7 +27,7 @@
 @font-face {
     font-family: Gilroy;
     font-display: swap;
-    src: url(../fonts/Gilroy-Heavy.woff2) format("woff2");
+    src: url(../../fonts/Gilroy-Heavy.woff2) format("woff2");
     font-weight: 900;
     font-style: normal
 }
@@ -35,7 +35,7 @@
 @font-face {
     font-family: Gilroy;
     font-display: swap;
-    src: url(../fonts/Gilroy-Light.woff2) format("woff2");
+    src: url(../../fonts/Gilroy-Light.woff2) format("woff2");
     font-weight: 300;
     font-style: normal
 }
@@ -43,7 +43,7 @@
 @font-face {
     font-family: Gilroy;
     font-display: swap;
-    src: url(../fonts/Gilroy-Medium.woff2) format("woff2");
+    src: url(../../fonts/Gilroy-Medium.woff2) format("woff2");
     font-weight: 500;
     font-style: normal
 }
@@ -51,7 +51,7 @@
 @font-face {
     font-family: Gilroy;
     font-display: swap;
-    src: url(../fonts/Gilroy-Regular.woff2) format("woff2");
+    src: url(../../fonts/Gilroy-Regular.woff2) format("woff2");
     font-weight: 400;
     font-style: normal
 }
@@ -59,7 +59,7 @@
 @font-face {
     font-family: Gilroy;
     font-display: swap;
-    src: url(../fonts/Gilroy-SemiBold.woff2) format("woff2");
+    src: url(../../fonts/Gilroy-SemiBold.woff2) format("woff2");
     font-weight: 600;
     font-style: normal
 }
