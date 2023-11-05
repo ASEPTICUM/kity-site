@@ -1,0 +1,109 @@
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+{% footer_menu as menu %}
+<!--
+    <footer>
+        <div class="container">
+            <div class="footer">
+                <div class="footer__info">
+                    <div class="footer__block">
+                        <div class="footer__title">{% trans "Информация" %}</div>
+                        <ul class="footer__list">
+                            {% for menu_item in menu %}
+                                <li class="footer__item">
+                                    <a href="{{ menu_item.link }}">{{menu_item.name}}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="footer__block">
+                        <div class="footer__title">{% trans "Контакты" %}</div>
+                        {% autoescape off %}
+                            {% footer_contact_block %}
+                        {% endautoescape %}
+                    </div>
+                    <div class="footer__block">
+                        <div class="logo"><img src="{% static 'bsite/img/logo2.svg' %}"></div>
+                        {% autoescape off %}
+                            {% footer_info_block %}
+                        {% endautoescape %}
+                    </div>
+                </div>
+                <div class="footer__rights">© 2022 BPAY-EXCHANGE. {% trans "Все права защищены" %}</div>
+            </div>
+        </div>
+    </footer>
+-->
+
+<footer class="footer">
+    <div class="footer__container">
+        <div class="footer__top">
+            <a class="footer__logo" href="/">
+                <img src="../images/logo.svg" alt="">
+            </a>
+            <ul class="footer__menu">
+                <a href="{% url 'tos' %}">
+                    <li>Правила обмена</li>
+                </a>
+                <a href="{% url 'amlkqc' %}">
+                    <li>AML/KYC</li>
+                </a>
+                <a href="{% url 'questions' %}">
+                    <li>FAQ</li>
+                </a>
+                <a href="">
+                    <li>Контакты</li>
+                </a>
+            </ul>
+
+
+            <div class="footer__social-wrapeml">
+                <div class="footer__social-icon">
+                    <svg class="footer-eml" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M18 5H6C4 5 3 6 3 8V17C3 19 4 20 6 20H18C20 20 21 19 21 17V8C21 6 20 5 18 5ZM17.9409 9.606L13.0291 13.178C12.7211 13.402 12.36 13.514 12 13.514C11.64 13.514 11.2779 13.402 10.9709 13.179L6.05908 9.606C5.72408 9.363 5.65004 8.893 5.89404 8.558C6.13704 8.224 6.60389 8.14801 6.94189 8.39301L11.854 11.965C11.942 12.028 12.059 12.029 12.147 11.965L17.0591 8.39301C17.3961 8.14801 17.8639 8.224 18.1069 8.558C18.3509 8.894 18.2759 9.363 17.9409 9.606Z"
+                            fill="#0173E5" />
+                    </svg>
+                </div>
+                <div class="footer__social-text" id="email-footer">
+                    <p>info.example@gmail.com</p> <span></span>
+                </div>
+            </div>
+            <a class="footer__social-wraptlg" href="https://t.me/whales">
+                <div class="footer__social-icon">
+                    <svg class="footer-tlg" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M16.0141 3.69164C16.22 3.60496 16.4454 3.57507 16.6668 3.60507C16.8882 3.63507 17.0975 3.72386 17.273 3.86221C17.4484 4.00056 17.5836 4.1834 17.6644 4.39171C17.7452 4.60001 17.7687 4.82617 17.7324 5.04664L15.8424 16.5108C15.6591 17.6166 14.4457 18.2508 13.4316 17.7C12.5832 17.2391 11.3232 16.5291 10.1899 15.7883C9.62324 15.4175 7.88741 14.23 8.10074 13.385C8.28407 12.6625 11.2007 9.94747 12.8674 8.3333C13.5216 7.69914 13.2232 7.3333 12.4507 7.91664C10.5316 9.36497 7.45241 11.5675 6.43407 12.1875C5.53574 12.7341 5.06741 12.8275 4.50741 12.7341C3.48574 12.5641 2.53824 12.3008 1.76491 11.98C0.719907 11.5466 0.77074 10.11 1.76407 9.69164L16.0141 3.69164Z"
+                            fill="#0173E5" />
+                    </svg>
+                </div>
+                <div class="footer__social-text">
+                    <p>Мы в телеграм</p>
+                </div>
+            </a>
+
+        </div>
+        <ul class="footer__menu-mob">
+            <a href="{% url 'tos' %}">
+                <li>Правила обмена</li>
+            </a>
+            <a href="{% url 'amlkqc' %}">
+                <li>AML/KYC</li>
+            </a>
+            <a href="{% url 'questions' %}">
+                <li>FAQ</li>
+            </a>
+            <a href="">
+                <li>Контакты</li>
+            </a>
+        </ul>
+        <div class="footer__bottom">
+            <a class="" href="">Пользовательское соглашение</a>
+            <a class="" href="">Политика конфиденциальности</a>
+            <a class="" href="">© 2023 Киты</a>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,273 @@
+{% load i18n %}
+{% load static %}
+{% load bsite_tags %}
+{% header_menu as main_menu %}
+{% load widget_tweaks %}
+<!--
+<header>
+    <div class="container">
+        <div class="header">
+            <div class="flex">
+                <div class="logo">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'bsite/img/logo2.svg' %}" alt="logo">
+                    </a>
+                </div>
+                <div class="header__languages languages">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info for LANGUAGE_CODE as lang %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    <div class="languages__active">
+                        <span>{{ lang.name_local }}</span>
+                        <div class="languages__narrow"><img src="{% static 'bsite/img/Dropdown.svg' %}"></div>
+                    </div>
+                    <ul class="languages__list">
+                        {% for language in languages %}
+                        <li class="languages__item"><a
+                                href="{% translate_url language.code %}">{{ language.name_local }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <nav class="header__menu">
+                {% with request.resolver_match.url_name as url_name %}
+                <ul class="header__list">
+                    {% for menu_item in main_menu %}
+                    <li class="header__item {% if url_name == menu_item.link %}active{% endif %}">
+                        <a href="{{ menu_item.link }}">{{menu_item.name}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endwith %}
+            </nav>
+            <div class="header__buttons">
+                {% if user_token %}
+                <button onclick="location.href='{% url 'profile' %}'" class="yellow-button blind-background">
+                    {% trans "Профиль" %}
+                </button>
+                <button onclick="location.href='{% url 'logout' %}'" class="yellow-button">
+                    {% trans "Выйти" %}
+                </button>
+                {% else %}
+                <button onclick="location.href='{% url 'login' %}'" class="yellow-button blind-background">
+                    {% trans "Вход" %}
+                </button>
+                <button onclick="location.href='{% url 'register' %}'" class="yellow-button">
+                    {% trans "Регистрация" %}
+                </button>
+                {% endif %}
+            </div>
+            <div class="header__burger"><span></span></div>
+        </div>
+    </div>
+    <div class="header-infoMessage blind-background">
+        <div class="container text-center">
+            {% now "H" as today_H %}
+            {% if today_H|add:0 <= 21 and today_H|add:0 >= 12  %}
+            {% trans "Операторы онлайн" %}
+            <span class="circle green-background"></span>
+            {% else %}
+            {% trans "Операторы офлайн" %}
+            <span class="circle red-background"></span>
+            {% endif %}
+            {% trans "Мы работаем с 12:00 до 21:00 по МСК" %}
+        </div>
+    </div>
+</header>
+-->
+
+<header class="header">
+    <div class="header__container">
+        <div class="header__row">
+            <a class="header__logo" href="/"><img src="{% static 'bsite/images/logo.svg' %}" alt="logo"></a>
+            <div class="header__divider"></div>
+            <ul class="header__menu">
+                <a class="header__menu-item" id="menu_rules" href="{% url 'tos' %}">
+                    <li>Правила обмена</li>
+                </a>
+                <a class="header__menu-item" id="menu_amlkyc" href="{% url 'amlkqc' %}">
+                    <li>AML/KYC</li>
+                </a>
+                <a class="header__menu-item" id="menu_faq" href="{% url 'questions' %}">
+                    <li>FAQ</li>
+                </a>
+            </ul>
+            <a class="header__social-wraptlg" href="https://t.me/whales">
+                <div class="header__social-icon">
+                    <svg class="tlg" class="eml" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M16.0141 3.69164C16.22 3.60496 16.4454 3.57507 16.6668 3.60507C16.8882 3.63507 17.0975 3.72386 17.273 3.86221C17.4484 4.00056 17.5836 4.1834 17.6644 4.39171C17.7452 4.60001 17.7687 4.82617 17.7324 5.04664L15.8424 16.5108C15.6591 17.6166 14.4457 18.2508 13.4316 17.7C12.5832 17.2391 11.3232 16.5291 10.1899 15.7883C9.62324 15.4175 7.88741 14.23 8.10074 13.385C8.28407 12.6625 11.2007 9.94747 12.8674 8.3333C13.5216 7.69914 13.2232 7.3333 12.4507 7.91664C10.5316 9.36497 7.45241 11.5675 6.43407 12.1875C5.53574 12.7341 5.06741 12.8275 4.50741 12.7341C3.48574 12.5641 2.53824 12.3008 1.76491 11.98C0.719907 11.5466 0.77074 10.11 1.76407 9.69164L16.0141 3.69164Z"
+                            fill="#0173E5" />
+                    </svg>
+                </div>
+                <div class="header__social-text">
+                    <p>Мы в телеграм</p>
+                </div>
+            </a>
+            <div class="header__social-wrapeml">
+                <div class="header__social-icon">
+                    <svg class="eml" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M18 5H6C4 5 3 6 3 8V17C3 19 4 20 6 20H18C20 20 21 19 21 17V8C21 6 20 5 18 5ZM17.9409 9.606L13.0291 13.178C12.7211 13.402 12.36 13.514 12 13.514C11.64 13.514 11.2779 13.402 10.9709 13.179L6.05908 9.606C5.72408 9.363 5.65004 8.893 5.89404 8.558C6.13704 8.224 6.60389 8.14801 6.94189 8.39301L11.854 11.965C11.942 12.028 12.059 12.029 12.147 11.965L17.0591 8.39301C17.3961 8.14801 17.8639 8.224 18.1069 8.558C18.3509 8.894 18.2759 9.363 17.9409 9.606Z"
+                            fill="#0173E5" />
+                    </svg>
+                </div>
+                <div class="header__social-text" id="email-header">
+                    <p>info.example@gmail.com</p>
+                    <span></span>
+                </div>
+            </div>
+            <div class="header__divider-shortlife"></div>
+
+            <div class="signinmodal">
+                <div class="signinmodal-container">
+                    <div class="signinmodal__body">
+
+                        <svg class="signinmodal__close" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M6.46967 6.46967C6.76256 6.17678 7.23744 6.17678 7.53033 6.46967L17.5303 16.4697C17.8232 16.7626 17.8232 17.2374 17.5303 17.5303C17.2374 17.8232 16.7626 17.8232 16.4697 17.5303L6.46967 7.53033C6.17678 7.23744 6.17678 6.76256 6.46967 6.46967Z"
+                                fill="#1C1B1E" />
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M17.5303 6.46967C17.8232 6.76256 17.8232 7.23744 17.5303 7.53033L7.53033 17.5303C7.23744 17.8232 6.76256 17.8232 6.46967 17.5303C6.17678 17.2374 6.17678 16.7626 6.46967 16.4697L16.4697 6.46967C16.7626 6.17678 17.2374 6.17678 17.5303 6.46967Z"
+                                fill="#1C1B1E" />
+                        </svg>
+
+
+                        <h4 class="signinmodal__mtitle">Вход</h4>
+
+                        <div class="signinmodal__row">
+                            <a href="{% url 'register' %}">Нет аккаунта?</a>
+                            <a href="{% url 'recover_password' %}">Забыли пароль?</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {% if user_token %}
+            <a class="header__fill-roundbtn" href="{% url 'profile' %}">{% trans "Профиль" %}</a>
+            <a class="header__outline-roundbtn" href="{% url 'logout' %}">{% trans "Выход" %}</a>
+            {% else %}
+            <p class="header__fill-roundbtn signInModalBtn">Вход</p>
+            <a class="header__outline-roundbtn" href="{% url 'register' %}">{% trans "Регистрация" %}</a>
+            {% endif %}
+
+            <div class="burgermodal">
+                <div class="burgermodal-container">
+                    <div class="burgermodal__header">
+                        <a class="burgermodal__logo" href="/"><img src="../images/logo.svg" alt="logo"></a>
+                        <div class="burgermodal__close">
+                            <img src="../images/close-small.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="burgermodal__body">
+                        <div class="burgermodal__item">
+                            <h4 class="burgermodal__item-title">Навигация</h4>
+                            <a id="mob_menu-rules" class="burgermodal__item-link" href="{% url 'tos' %}">Правила
+                                обмена</a>
+                            <a id="mob_menu-amlkyc" class="burgermodal__item-link" href="{% url 'amlkqc' %}">AML/KYC</a>
+                            <a id="mob_menu-faq" class="burgermodal__item-link" href="{% url 'questions' %}">FAQ</a>
+                        </div>
+                        <div class="burgermodal__item">
+                            <h4 class="burgermodal__item-title">Контакты</h4>
+                            <a class="burgermodal__social-wraptlg" href="https://t.me/whales">
+                                <div class="burgermodal__social-icon">
+                                    <svg class="tlg" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M16.0141 3.69164C16.22 3.60496 16.4454 3.57507 16.6668 3.60507C16.8882 3.63507 17.0975 3.72386 17.273 3.86221C17.4484 4.00056 17.5836 4.1834 17.6644 4.39171C17.7452 4.60001 17.7687 4.82617 17.7324 5.04664L15.8424 16.5108C15.6591 17.6166 14.4457 18.2508 13.4316 17.7C12.5832 17.2391 11.3232 16.5291 10.1899 15.7883C9.62324 15.4175 7.88741 14.23 8.10074 13.385C8.28407 12.6625 11.2007 9.94747 12.8674 8.3333C13.5216 7.69914 13.2232 7.3333 12.4507 7.91664C10.5316 9.36497 7.45241 11.5675 6.43407 12.1875C5.53574 12.7341 5.06741 12.8275 4.50741 12.7341C3.48574 12.5641 2.53824 12.3008 1.76491 11.98C0.719907 11.5466 0.77074 10.11 1.76407 9.69164L16.0141 3.69164Z"
+                                            fill="#0173E5" />
+                                    </svg>
+                                </div>
+                                <p class="burgermodal__social-text">Мы в телеграм</p>
+                            </a>
+                            <div class="burgermodal__social-wrapeml">
+                                <div class="burgermodal__social-icon">
+                                    <svg class="eml" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M18 5H6C4 5 3 6 3 8V17C3 19 4 20 6 20H18C20 20 21 19 21 17V8C21 6 20 5 18 5ZM17.9409 9.606L13.0291 13.178C12.7211 13.402 12.36 13.514 12 13.514C11.64 13.514 11.2779 13.402 10.9709 13.179L6.05908 9.606C5.72408 9.363 5.65004 8.893 5.89404 8.558C6.13704 8.224 6.60389 8.14801 6.94189 8.39301L11.854 11.965C11.942 12.028 12.059 12.029 12.147 11.965L17.0591 8.39301C17.3961 8.14801 17.8639 8.224 18.1069 8.558C18.3509 8.894 18.2759 9.363 17.9409 9.606Z"
+                                            fill="#0173E5" />
+                                    </svg>
+                                </div>
+                                <div href="" class="burgermodal__social-text" id="email-burger">
+                                    <p>info.example@gmail.com</p>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="burgermodal__item">
+                            <h4 class="burgermodal__item-title">Личный кабинет</h4>
+                            <div class="burgermodal__row-btns">
+                                <div class="signinmodal">
+                                    <div class="signinmodal-container">
+                                        <div class="signinmodal__body">
+
+                                            <svg class="signinmodal__close" width="24" height="24" viewBox="0 0 24 24"
+                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M6.46967 6.46967C6.76256 6.17678 7.23744 6.17678 7.53033 6.46967L17.5303 16.4697C17.8232 16.7626 17.8232 17.2374 17.5303 17.5303C17.2374 17.8232 16.7626 17.8232 16.4697 17.5303L6.46967 7.53033C6.17678 7.23744 6.17678 6.76256 6.46967 6.46967Z"
+                                                    fill="#1C1B1E" />
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M17.5303 6.46967C17.8232 6.76256 17.8232 7.23744 17.5303 7.53033L7.53033 17.5303C7.23744 17.8232 6.76256 17.8232 6.46967 17.5303C6.17678 17.2374 6.17678 16.7626 6.46967 16.4697L16.4697 6.46967C16.7626 6.17678 17.2374 6.17678 17.5303 6.46967Z"
+                                                    fill="#1C1B1E" />
+                                            </svg>
+
+
+                                            <h4 class="signinmodal__mtitle">Вход</h4>
+                                            <form class="signinmodal__form" action="">
+                                                <span id="emailError" class="error"></span>
+                                                <input class="signinmodal__input-text" id="signin_email" type="text"
+                                                    placeholder="Email">
+                                                <span id="passwordError" class="error"></span>
+                                                <input class="signinmodal__input-text" id="signin_password"
+                                                    type="password" placeholder="Введите пароль">
+                                                <div class="signinmodal__checkbox-wrap">
+                                                    <input type="checkbox" id="signin-checkbox">
+                                                    <label for="signin-checkbox"></label>
+                                                    <label class="signinmodal__text" for="signin-checkbox">Запомнить
+                                                        меня</label>
+                                                </div>
+
+                                                <button type="submit" class="signinmodal__fill-boxbtn">Войти</button>
+                                            </form>
+                                            <div class="signinmodal__row">
+                                                <a href="{% url 'register' %}">Нет аккаунта?</a>
+                                                <a href="{% url 'recover_password' %}">Забыли пароль?</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if user_token %}
+                                <a class="burgermodal__fill-roundbtn"
+                                    href="{% url 'profile' %}">{% trans "Профиль" %}</a>
+                                <a class="burgermodal__outline-roundbtn"
+                                    href="{% url 'logout' %}">{% trans "Выход" %}</a>
+                                {% else %}
+                                <p class="burgermodal__fill-roundbtn signInModalBtnMob">Вход</p>
+                                <a class="burgermodal__outline-roundbtn"
+                                    href="{% url 'register' %}">{% trans "Регистрация" %}</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header__burger-menu">
+                <div class="header__social-icon">
+                    <svg class="header__burger-svg" width="16" height="10" viewBox="0 0 16 10" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.799805 1.40039H15.1998" stroke="black" stroke-width="1.35" stroke-linecap="round" />
+                        <path d="M0.799805 5H15.1998" stroke="black" stroke-width="1.35" stroke-linecap="round" />
+                        <path d="M0.799805 8.60059H15.1998" stroke="black" stroke-width="1.35" stroke-linecap="round" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

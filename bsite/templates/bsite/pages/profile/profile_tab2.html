@@ -1,0 +1,54 @@
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+{% load widget_tweaks %}
+
+<!-- old stuff
+    <div data-tabbody="profile-2" class="profile-tab MiTab-item">
+        <div class="container container--small">
+            {% include "bsite/messages.html" %}
+            <form action="{% url 'profile' %}" method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                {% error_message form.non_field_errors %}
+                {% endif %}
+                <div class="input-container margin-bottom">
+                    {{ form.mail }}
+                    <div class="input-placeholder">{% trans "Ваш email" %}</div>
+                </div>
+                <div class="input-container margin-bottom">
+                    {{ form.oldpassword }}
+                    <div class="input-placeholder">{% trans "Ваш старый пароль" %}</div>
+                </div>
+                <div class="input-container margin-bottom">
+                    {{ form.password1 }}
+                    <div class="input-placeholder">{% trans "Ваш новый пароль" %}</div>
+                </div>
+                <div class="input-container margin-bottom">
+                    {{ form.password2 }}
+                    <div class="input-placeholder">{% trans "Ваш новый пароль еще раз" %}</div>
+                </div>
+                <div class="margin-top-x2">
+                    <button class="yellow-button center" type="submit">{% trans "Сохранить изменения" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+-->
+
+<div class="profile__security">
+    <h4 class="profile__security__smtitle">{% trans "Безопасность" %}</h4>
+    <form class="profile__security-form" action="{% url 'profile' %}" method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        {% error_message form.non_field_errors %}
+        {% endif %}
+        <div class="profile__secform-wrap">
+            {% render_field form.mail class="profile__input-text" type="email" placeholder="Ваш email" %}
+            {% render_field form.oldpassword class="profile__input-text" type="password" placeholder="Ваш старый пароль" %}
+            {% render_field form.password1 class="profile__input-text" type="password" placeholder="Ваш новый пароль" %}
+            {% render_field form.password2 class="profile__input-text" type="password" placeholder="Ваш новый пароль еще раз" %}
+        </div>
+        <button class="profile__secform__fill-boxbtn" type="submit">{% trans "Сохранить изменения" %}</button>
+    </form>
+</div>

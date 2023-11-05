@@ -1,0 +1,21 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+
+{% block title %}
+    <title>{% title 'custom' page.translations|trans_field:'title' %}</title>
+{% endblock %}
+
+{% block content %}
+<section>
+    {% include "bsite/messages.html" %}
+    <div class="container">
+        <h1 class="margin-bottom">{{ page.translations|trans_field:'title' }}</h1>
+        {% autoescape off %}
+            {{ page.translations|trans_field:'content' }}
+        {% endautoescape %}
+    </div>
+</section>
+
+{% endblock %}

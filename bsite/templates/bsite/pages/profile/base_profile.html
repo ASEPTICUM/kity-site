@@ -1,0 +1,91 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load bsite_tags %}
+{% load i18n %}
+{% block title %}
+<title>{% title 'custom' "Мой профиль" %}</title>
+{% endblock %}
+
+{% block content %}
+<!--   old stuff 
+    <section>
+        <div class="container">
+            
+            <h1 class="margin-bottom">
+                {% trans "Здравствуйте" %}, {% if user.name %}{{user.name}}{% else %}{{user.email}}{% endif %}
+            </h1>
+            <div data-tab-menu="profile" class="tabLinksContainer margin-bottom">
+                <div data-tab="profile-1" class="MiTab-narrow tabLink active-tabLink">{% trans "История обменов" %}</div>
+                <div data-tab="profile-2" class="MiTab-narrow tabLink">{% trans "Личные данные" %}</div>
+            </div>
+            <div data-tab-container="profile" class="profile-tabsContainer">
+                
+            </div>
+        </div>
+    </section>
+    {% include "bsite/wallets.html" %}
+
+-->
+
+<section class="profile">
+    <div class="profile__container">
+        <div class="profile__row">
+            <div class="profile__info">
+                <div class="profile__info-personal">
+                    <div class="profile__info-avatar" style="text-transform: uppercase;">{{user.name|first}}</div>
+                    <div class="profile__info-name">
+                        {% if user.name %}{{user.name}}{% else %}{{user.email}}{% endif %}
+                        <span>Дата регистрации:
+                            <br>
+                            {% strdate_change_format user.date_joined '%Y-%m-%dT%H:%M:%S.%f%z' '%d %B %Y, %H:%M' %}</span>
+                    </div>
+                </div>
+                <ul class="profile__info-menu">
+                    <li class="profile__info-link active" id="myorders">
+                        <svg class="profile__link-img" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M19.339 2.50609L12.7738 1.34813C11.4818 1.12113 10.4168 1.29211 9.60684 1.85911C8.79684 2.42611 8.27183 3.36808 8.04483 4.66008L7.93692 5.27409L4.65786 5.85112C2.06386 6.31212 0.889003 7.99408 1.35 10.5871L2.89395 19.3401C3.11795 20.6321 3.6399 21.5741 4.4479 22.1411C5.0259 22.5461 5.73389 22.7501 6.56289 22.7501C6.89489 22.7501 7.2478 22.7171 7.6188 22.6511L14.1898 21.4941C16.0568 21.1561 16.8979 20.2541 17.2719 19.3851C17.3199 19.3861 17.375 19.3991 17.422 19.3991C19.422 19.3991 20.716 18.2171 21.11 15.9901L22.653 7.23613C23.108 4.64313 21.933 2.96309 19.339 2.50609ZM13.9259 20.018L7.35782 21.1741C6.46882 21.3301 5.78096 21.2441 5.30996 20.9131C4.83996 20.5831 4.52498 19.9681 4.37198 19.0811L2.82681 10.3241C2.51081 8.54008 3.13685 7.64413 4.91885 7.32713L7.65884 6.84508L6.50088 13.4141C6.04388 16.0081 7.21989 17.6881 9.81289 18.1451L15.663 19.1761C15.385 19.5051 14.8819 19.844 13.9259 20.018ZM21.175 6.97612L19.632 15.7301C19.317 17.5141 18.4228 18.1411 16.6378 17.8261L10.0729 16.6681C8.2899 16.3541 7.66296 15.4591 7.97696 13.6751L9.5209 4.92113C9.6769 4.03513 9.99595 3.41812 10.4669 3.08812C10.7879 2.86412 11.208 2.75108 11.724 2.75108C11.966 2.75108 12.2298 2.77609 12.5138 2.82609L19.079 3.98411C20.862 4.29711 21.489 5.19212 21.175 6.97612ZM18.5968 11.0351C18.5338 11.3991 18.217 11.6551 17.86 11.6551C17.817 11.6551 17.7729 11.6521 17.7289 11.6441L11.164 10.4861C10.756 10.4141 10.4828 10.0251 10.5558 9.61711C10.6268 9.20911 11.02 8.93708 11.424 9.00908L17.9889 10.1671C18.3959 10.2381 18.6688 10.6261 18.5968 11.0351ZM19.297 7.77312C19.234 8.13712 18.917 8.39311 18.56 8.39311C18.517 8.39311 18.4729 8.39012 18.4289 8.38212L11.8639 7.2241C11.4559 7.1521 11.183 6.76309 11.256 6.35509C11.327 5.94809 11.7199 5.67412 12.1239 5.74712L18.6889 6.90514C19.0969 6.97714 19.369 7.36512 19.297 7.77312ZM15.5539 13.8961C15.4909 14.2601 15.1738 14.5161 14.8168 14.5161C14.7738 14.5161 14.7299 14.5131 14.6859 14.5051L10.5819 13.7811C10.1739 13.7091 9.90103 13.3201 9.97403 12.9121C10.045 12.5051 10.4359 12.2311 10.8419 12.3041L14.946 13.0281C15.354 13.0991 15.6259 13.4881 15.5539 13.8961Z"
+                                fill="#0E0E0E" />
+                        </svg>
+                        {% trans "Мои заявки" %}
+                    </li>
+                    <li class="profile__info-link" id="security">
+                        <svg class="profile__link-img" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M16.75 8.30396V7C16.75 4.381 14.619 2.25 12 2.25C9.381 2.25 7.25 4.381 7.25 7V8.30396C5.312 8.56096 4.25 9.846 4.25 12V18C4.25 20.418 5.582 21.75 8 21.75H16C18.418 21.75 19.75 20.418 19.75 18V12C19.75 9.847 18.688 8.56196 16.75 8.30396ZM12 3.75C13.792 3.75 15.25 5.208 15.25 7V8.25H8.75V7C8.75 5.208 10.208 3.75 12 3.75ZM18.25 18C18.25 19.577 17.577 20.25 16 20.25H8C6.423 20.25 5.75 19.577 5.75 18V12C5.75 10.423 6.423 9.75 8 9.75H16C17.577 9.75 18.25 10.423 18.25 12V18ZM13.27 14C13.27 14.412 13.058 14.7601 12.75 14.9871V17C12.75 17.414 12.414 17.75 12 17.75C11.586 17.75 11.25 17.414 11.25 17V14.9619C10.962 14.7329 10.7649 14.395 10.7649 14C10.7649 13.31 11.32 12.75 12.01 12.75H12.02C12.71 12.75 13.27 13.31 13.27 14Z"
+                                fill="#0E0E0E" />
+                        </svg>
+                        {% trans "Безопасность" %}
+                    </li>
+                </ul>
+            </div>
+            <div class="profile__items">
+                {% include "bsite/pages/profile/profile_tab1.html" %}
+                {% include "bsite/pages/profile/profile_tab2.html" %}
+
+
+                <div class="profile__promocode">
+                    <h4 class="profile__promocode__smtitle">Промокоды</h4>
+                    <p class="profile__promocode-mtext">Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
+                        praesentium qui dolorum quam cumque libero dolores iste, sunt ducimus perferendis, quaerat
+                        tenetur nihil non excepturi maxime quibusdam? Iusto, itaque dolor?</p>
+                </div>
+                <div class="profile__refer">
+                    <h4 class="profile__refer__smtitle">Реферальная ссылка</h4>
+                    <p class="profile__refer-mtext">Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
+                        praesentium qui dolorum quam cumque libero dolores iste, sunt ducimus perferendis, quaerat
+                        tenetur nihil non excepturi maxime quibusdam? Iusto, itaque dolor?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'bsite/js/profile.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,2214 @@
+{% extends 'bsite/base.html' %}
+{% load i18n %}
+{% load static %}
+{% load bsite_tags %}
+{% load widget_tweaks %}
+{% block content %}
+
+<form action="{% url 'index' %}" name="exchange_form" method="post">
+    {% csrf_token %}
+    {% for hidden in form.hidden_fields %}
+    {{ hidden }}
+    {% endfor %}
+    {{ exchange_options|json_script:"exchange_options" }}
+    {{ wallets|json_script:"wallets" }}
+    {{ order_types|json_script:"order_types" }}
+
+
+    <!-- old stuff
+    <section>
+        <div class="container container--small">
+            <div class="trade">
+                <h1 class="margin-bottom">{% trans "Отдаете" %}</h1>
+                <div class="trade__field from_trade__field">
+                    <div class="trade__contentField">
+                        <div class="input-container">
+                            {{ form.sum_from }}
+                            <div class="input-placeholder">{% trans "Отдаете" %}</div>
+                        </div>
+                        <div class="trade__buttonContainer">
+                            <button class="trade__fieldButton from_button yellow-button">
+                                <span class="trade__iconCurrency">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="17"
+                                        viewBox="0 0 384 512">
+                                        <path
+                                            d="M96 32C78.3 32 64 46.3 64 64V256H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H64v32H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H64v32c0 17.7 14.3 32 32 32s32-14.3 32-32V416H288c17.7 0 32-14.3 32-32s-14.3-32-32-32H128V320H240c79.5 0 144-64.5 144-144s-64.5-144-144-144H96zM240 256H128V96H240c44.2 0 80 35.8 80 80s-35.8 80-80 80z" />
+                                    </svg>
+                                </span>
+                                <span class="trade__nameCurrency"></span>
+                                <img src="{% static 'bsite/img/Dropdown-black.svg' %}">
+                            </button>
+                            <ul class="trade__listCurrency listCurrency listCurrencyFrom">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="trade-info">
+                        <div class="trade-infoBlock">
+                            min: <span class="trade-infoBlock-min">5526</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="trade__changeButton yellow-button">
+                    <svg width="12" height="17" viewBox="0 0 12 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M6.98396 1C6.98396 0.44772 7.43166 0 7.98396 0C8.34136 0 8.65496 0.18749 8.83176 0.46947L11.5194 3.15709C11.91 3.54761 11.91 4.18078 11.5194 4.5713C11.1289 4.96183 10.4957 4.96183 10.1052 4.5713L8.98396 3.45008V11.0001C8.98396 11.5523 8.53626 12.0001 7.98396 12.0001C7.43166 12.0001 6.98396 11.5523 6.98396 11.0001V1.04945C6.98386 1.04033 6.98386 1.03121 6.98396 1.02209V1Z" />
+                        <path
+                            d="M5.01584 15.0148C5.01584 15.5671 4.56814 16.0148 4.01584 16.0148C3.65844 16.0148 3.34484 15.8274 3.16801 15.5454L0.48039 12.8578C0.08987 12.4672 0.08987 11.8341 0.48039 11.4435C0.87092 11.053 1.50408 11.053 1.89461 11.4435L3.01583 12.5648V5.01489C3.01583 4.4626 3.46355 4.01489 4.01584 4.01489C4.56814 4.01489 5.01584 4.4626 5.01584 5.01489V14.9654C5.01594 14.9745 5.01594 14.9836 5.01584 14.9928V15.0148Z" />
+                    </svg>
+                </button>
+                <div class="trade__field to_trade__field">
+                    <h1 class="margin-bottom">{% trans "Получаете" %}</h1>
+                    <div class="trade__contentField">
+                        <div class="input-container">
+                            {{ form.sum_to }}
+                            <div class="input-placeholder">{% trans "Получаете" %}</div>
+                        </div>
+                        <div class="trade__buttonContainer">
+                            <button class="trade__fieldButton to_button yellow-button">
+                                <span class="trade__iconCurrency">
+                                    <svg width="21" height="20" viewBox="0 0 21 20" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_1_7107)">
+                                            <path
+                                                d="M20.681 12.419C19.3454 17.7762 13.9194 21.0365 8.56163 19.7006C3.206 18.3649 -0.0543092 12.9387 1.28194 7.58182C2.61694 2.224 8.04288 -1.03662 13.3991 0.299005C18.7566 1.63463 22.0166 7.0615 20.681 12.419Z" />
+                                            <path
+                                                d="M15.3886 8.57531C15.5876 7.24469 14.5745 6.52938 13.1892 6.05219L13.6386 4.24969L12.5414 3.97625L12.1039 5.73125C11.8154 5.65938 11.5192 5.59156 11.2248 5.52437L11.6654 3.75781L10.5689 3.48438L10.1192 5.28625C9.88043 5.23188 9.64605 5.17813 9.41855 5.12156L9.4198 5.11594L7.90668 4.73813L7.6148 5.91C7.6148 5.91 8.42887 6.09656 8.41168 6.10812C8.85605 6.21906 8.93637 6.51312 8.92293 6.74625L8.41105 8.79969C8.44168 8.8075 8.48137 8.81875 8.52512 8.83625C8.48855 8.82719 8.44949 8.81719 8.40918 8.8075L7.69168 11.6841C7.6373 11.8191 7.49949 12.0216 7.18887 11.9447C7.1998 11.9606 6.39137 11.7456 6.39137 11.7456L5.84668 13.0016L7.27449 13.3575C7.54012 13.4241 7.80043 13.4937 8.05668 13.5594L7.60262 15.3825L8.69855 15.6559L9.14824 13.8522C9.44762 13.9334 9.73824 14.0084 10.0226 14.0791L9.57449 15.8744L10.6717 16.1478L11.1257 14.3281C12.9967 14.6822 14.4036 14.5394 14.9957 12.8472C15.4729 11.4847 14.972 10.6988 13.9876 10.1863C14.7045 10.0209 15.2445 9.54938 15.3886 8.57531ZM12.8817 12.0906C12.5426 13.4531 10.2486 12.7166 9.5048 12.5319L10.1073 10.1166C10.8511 10.3022 13.2361 10.6697 12.8817 12.0906ZM13.2211 8.55562C12.9117 9.795 11.0023 9.16531 10.3829 9.01094L10.9292 6.82031C11.5486 6.97469 13.5432 7.26281 13.2211 8.55562Z"
+                                                fill="white" />
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_1_7107">
+                                                <rect width="20" height="20" fill="white"
+                                                    transform="translate(0.982422)" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                </span>
+                                <span class="trade__nameCurrency"></span>
+                                <img src="{% static 'bsite/img/Dropdown-black.svg' %}">
+                            </button>
+                            <ul class="trade__listCurrency listCurrency listCurrencyTo"></ul>
+                        </div>
+                    </div>
+                    <div class="trade-info">
+                        <div class="trade-infoBlock">
+                            min: <span>5526</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h1 class="margin-bottom margin-top">{% trans "Ваши данные" %}</h1>
+
+                <div class="input-container margin-bottom">
+                    {{ form.email }}
+                    <div class="input-placeholder">{% trans "Ваш email" %}</div>
+                </div>
+                <div class="input-container margin-bottom">
+                    {{ form.exchange_to_account }}
+                    <div class="input-placeholder">{% trans "Номер счета/кошелька" %}</div>
+                </div>
+                <div class="margin-bottom">
+                    <div class="text">{% trans "Создавая заявку вы соглашаетесь с" %} <a href="{% url 'tos' %}"
+                            class="underline" target="_blank">
+                            {% trans "условиями и правилами сервиса" %}</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="margin-top-x2">
+        <div class="container">
+            <div class="request">
+                <div class="request__step">
+                    <div class="request__subtitle">{% trans "Отдаете" %}</div>
+                    <div class="request__info">
+                        <span class="request__from_sum">0</span>
+                        <span class="request__from_cur">BTC</span>
+                    </div>
+                </div>
+                <img class="request__narrow" src="{% static 'bsite/img/arrow-narrow-right.svg' %}">
+                <div class="request__step">
+                    <div class="request__subtitle">{% trans "Получаете" %}</div>
+                    <div class="request__info">
+                        <span class="request__to_sum">0</span>
+                        <span class="request__to_cur">RUB</span>
+
+                    </div>
+                </div>
+                <div class="request__courseBlock">
+                    <div class="request__courseBlockTitle">{% trans "по курсу" %}</div>
+                    <div class="request__courseBlockInfo">
+                        1 421 731.57 ₽ <span class="grey">=</span> 1 BTC</span>
+                    </div>
+                </div>
+                <input type="submit" style="display: none" id="submit_button">
+
+                </input>
+                <button class="request__button yellow-button"
+                    onclick="document.getElementById('submit_button').click()">
+                    {% trans "Создать заявку" %}
+                    <svg width="25" height="16" viewBox="0 0 25 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.5 4L21.5 8.5M21.5 8.5L17.5 13M21.5 8.5H3.5" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+-->
+
+    {% include "bsite/messages.html" %}
+    {% if form.non_field_errors %}
+    {% error_message form.non_field_errors %}
+    {% endif %}
+
+    {% if wallets %}
+    <!--{% include "bsite/wallets.html" with wallets=wallets %}-->
+    {% endif %}
+
+    <section class="hero">
+        <div class="hero__container">
+            <div class="hero__exchange">
+                <div class="hero__give-cur">
+                    <div class="hero__wrap">
+                        <h2 class="hero__give__mtitle">{% trans "Отдаете" %}</h2>
+                        <label class="hero__label-give" for="">
+                            <input class="hero__give-search" placeholder="Найти валюту"></label>
+                    </div>
+                    <div class="hero__currencies">
+                        <span>ВСЕ</span>
+                        <span>BTC</span>
+                        <span>ETH</span>
+                        <span>LTC</span>
+                        <span>XRP</span>
+                        <span>XMR</span>
+                        <span>DOGE</span>
+                        <span>MATIC</span>
+                        <span>DASH</span>
+                        <span>ZEC</span>
+                        <span>USDT</span>
+                        <span>USDC</span>
+                        <span>EOS</span>
+                        <span>ADA</span>
+                        <span>XRP</span>
+                        <span>DOT</span>
+                        <span>WAVES</span>
+                        <span>BNB</span>
+                        <span>TRX</span>
+                        <span>LINK</span>
+                        <span>ATOM</span>
+                        <span>XTZ</span>
+                        <span>UNI</span>
+                        <span>RVN</span>
+                        <span>SOL</span>
+                        <span>ALGO</span>
+                        <span>AVAX</span>
+                        <span>USD</span>
+                        <span>RUB</span>
+                    </div>
+                    <div class="hero__give-mob">
+                        <div class="give-option">
+                            <div class="give-selected">
+                                <img class="give__selected-img" src="../images/crypto1-btc.svg" alt="">
+                                <p class="give__selected-text">Bitcoin</p>
+                                <img src="../images/angle-down.svg">
+
+                            </div>
+                            <ul class="options-give">
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto1-btc.svg">
+                                    <p class="giveText">Вitcoin</p>
+
+                                </li>
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto2-btc-cash.svg">
+                                    <p class="giveText">Bitcoin Cash</p>
+
+                                </li>
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto3-ethereum.svg">
+                                    <p class="giveText">Ethereum</p>
+
+                                </li>
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto4-ethereum-classic.svg">
+                                    <p class="giveText">Ethereum Classic</p>
+
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto5-litecoin.svg">
+                                    <p class="giveText">Litecoin</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto6-ripple.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto6-ripple.png">
+                                    </picture>
+                                    <p class="giveText">Ripple</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto7-monero.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto7-monero.png">
+                                    </picture>
+                                    <p class="giveText">Monero</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto8-dodecoin.svg">
+                                    <p class="giveText">Dogecoin</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto9-poligon.svg">
+                                    <p class="giveText">Polygon</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto10-dash.svg">
+                                    <p class="giveText">Dash</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto11-zcash.svg">
+                                    <p class="giveText">Zcash</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto12-tether.png">
+                                    </picture>
+                                    <p class="giveText">Tether Omni</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto12-tether.png">
+                                    </picture>
+                                    <p class="giveText">Tether ERC20</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto12-tether.png">
+                                    </picture>
+                                    <p class="giveText">Tether TRC20</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto12-tether.png">
+                                    </picture>
+                                    <p class="giveText">Tether BEP20</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto13-usdcoin.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto13-usdcoin.png">
+                                    </picture>
+                                    <p class="giveText">USDCoin TRC20</p>
+                                </li>
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto13-usdcoin.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto13-usdcoin.png">
+                                    </picture>
+                                    <p class="giveText">USDCoin ERC20</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto14-trueusd.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto14-trueusd.png">
+                                    </picture>
+                                    <p class="giveText">TrueUSD ERC20</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto14-trueusd.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto14-trueusd.png">
+                                    </picture>
+                                    <p class="giveText">TrueUSD TRC20</p>
+                                </li>
+
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto15-eosio.svg">
+                                    <p class="giveText">EOS</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto16-cardano.svg">
+                                    <p class="giveText">Cardano</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto-stellar.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto-stellar.png">
+                                    </picture>
+                                    <p class="giveText">Stellar</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto-waves.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto-waves.png">
+                                    </picture>
+                                    <p class="giveText">Waves</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto-bnb.svg">
+                                    <p class="giveText">BNB Bep2</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto-bnb.svg">
+                                    <p class="giveText">BNB Bep20</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto17-cosmos.svg">
+                                    <p class="giveText">Cosmos</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto18-tezos.svg">
+                                    <p class="giveText">Tezos</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto19-polkadot.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto19-polkadot.png">
+                                    </picture>
+                                    <p class="giveText">Polkadot</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto20-uniswap.svg">
+                                    <p class="giveText">Uniswap</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/crypto21-ravencoin.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/crypto21-ravencoin.png">
+                                    </picture>
+                                    <p class="giveText">Ravencoin</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto22-solana.svg">
+                                    <p class="giveText">Solana</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto23-algorand.svg">
+                                    <p class="giveText">Algorand</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/crypto24-avalanche.svg">
+                                    <p class="giveText">Avalanche</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/bank1-sberbank.svg">
+                                    <p class="giveText">Сбербанк</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/bank2-qiwi.svg">
+                                    <p class="giveText">QIWI</p>
+                                </li>
+
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/bank3-tinkoff.svg">
+                                    <p class="giveText">Тинькофф</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/bank4-yumoney.svg">
+                                    <p class="giveText">ЮMoney</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank5-vtb.webp" type="image/webp"><img class="giveImg"
+                                            src="../images/bank5-vtb.png">
+                                    </picture>
+                                    <p class="giveText">ВТБ</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank6-mir.webp" type="image/webp"><img class="giveImg"
+                                            src="../images/bank6-mir.png">
+                                    </picture>
+                                    <p class="giveText">Карта Мир</p>
+                                </li>
+
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank7-sbp.webp" type="image/webp"><img class="giveImg"
+                                            src="../images/bank7-sbp.png">
+                                    </picture>
+                                    <p class="giveText">СБП</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank8-visa-mastercard.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank8-visa-mastercard.png">
+                                    </picture>
+                                    <p class="giveText">Visa/MasterCard</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/bank9-rnkb.svg">
+                                    <p class="giveText">РНКБ</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank10-alfa.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank10-alfa.png">
+                                    </picture>
+                                    <p class="giveText">Альфа-Банк</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank11-raifasen.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank11-raifasen.png">
+                                    </picture>
+                                    <p class="giveText">Райфайзен</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <img class="giveImg" src="../images/bank3-tinkoff.svg">
+                                    <p class="giveText">Тинькофф QR</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank12-psb.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank12-psb.png">
+                                    </picture>
+                                    <p class="giveText">ПСБ</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank13-open.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank13-open.png">
+                                    </picture>
+                                    <p class="giveText">Открытие</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank14-phone.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank14-phone.png">
+                                    </picture>
+                                    <p class="giveText">Счет телефона</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank15-mts.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank15-mts.png">
+                                    </picture>
+                                    <p class="giveText">МТС Банк</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank16-rosbank.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank16-rosbank.png">
+                                    </picture>
+                                    <p class="giveText">Росбанк</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank17-gazprombank.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank17-gazprombank.png">
+                                    </picture>
+                                    <p class="giveText">Газпромбанк</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank10-alfa.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank10-alfa.png">
+                                    </picture>
+                                    <p class="giveText">Альфа cash-in</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank18-pochtabank.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank18-pochtabank.png">
+                                    </picture>
+                                    <p class="giveText">Почта Банк</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank19-avangard.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank19-avangard.png">
+                                    </picture>
+                                    <p class="giveText">Авангард</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/bank20-homecredit.webp" type="image/webp"><img
+                                            class="giveImg" src="../images/bank20-homecredit.png">
+                                    </picture>
+                                    <p class="giveText">Хоум Кредит</p>
+                                </li>
+
+                                <li class="optiongive">
+                                    <picture>
+                                        <source srcset="../images/cash.webp" type="image/webp"><img class="giveImg"
+                                            src="../images/cash.png">
+                                    </picture>
+                                    <p class="giveText">Наличные</p>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                        <input class="hero__givemob__input-text" type="number" value="300" placeholder="Введите сумму">
+                    </div>
+                </div>
+
+                <div class="hero__get-cur">
+                    <div class="hero__wrap">
+                        <h2 class="hero__get__mtitle">{% trans "Получаете" %}</h2>
+                        <label class="hero__label-get" for="">
+                            <input class="hero__get-search" placeholder="Найти валюту"></label>
+                    </div>
+                    <div class="hero__currencies">
+                        <span>ВСЕ</span>
+                        <span>BTC</span>
+                        <span>ETH</span>
+                        <span>LTC</span>
+                        <span>XRP</span>
+                        <span>XMR</span>
+                        <span>DOGE</span>
+                        <span>MATIC</span>
+                        <span>DASH</span>
+                        <span>ZEC</span>
+                        <span>USDT</span>
+                        <span>USDC</span>
+                        <span>EOS</span>
+                        <span>ADA</span>
+                        <span>XRP</span>
+                        <span>DOT</span>
+                        <span>WAVES</span>
+                        <span>BNB</span>
+                        <span>TRX</span>
+                        <span>LINK</span>
+                        <span>ATOM</span>
+                        <span>XTZ</span>
+                        <span>UNI</span>
+                        <span>RVN</span>
+                        <span>SOL</span>
+                        <span>ALGO</span>
+                        <span>AVAX</span>
+                        <span>USD</span>
+                        <span>RUB</span>
+                    </div>
+                    <div class="hero__get-mob">
+                        <div class="get-option">
+                            <div class="get-selected">
+                                <img class="get__selected-img" src="../images/bank3-tinkoff.svg" alt="">
+                                <p class="get__selected-text">Тинькофф</p>
+                                <img src="../images/angle-down.svg">
+
+                            </div>
+                            <ul class="options-get">
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto1-btc.svg">
+                                    <p class="getText">Вitcoin</p>
+
+                                </li>
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto2-btc-cash.svg">
+                                    <p class="getText">Bitcoin Cash</p>
+
+                                </li>
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto3-ethereum.svg">
+                                    <p class="getText">Ethereum</p>
+
+                                </li>
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto4-ethereum-classic.svg">
+                                    <p class="getText">Ethereum Classic</p>
+
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto5-litecoin.svg">
+                                    <p class="getText">Litecoin</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto6-ripple.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto6-ripple.png">
+                                    </picture>
+                                    <p class="getText">Ripple</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto7-monero.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto7-monero.png">
+                                    </picture>
+                                    <p class="getText">Monero</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto8-dodecoin.svg">
+                                    <p class="getText">Dogecoin</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto9-poligon.svg">
+                                    <p class="getText">Polygon</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto10-dash.svg">
+                                    <p class="getText">Dash</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto11-zcash.svg">
+                                    <p class="getText">Zcash</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto12-tether.png">
+                                    </picture>
+                                    <p class="getText">Tether Omni</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto12-tether.png">
+                                    </picture>
+                                    <p class="getText">Tether ERC20</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto12-tether.png">
+                                    </picture>
+                                    <p class="getText">Tether TRC20</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto12-tether.png">
+                                    </picture>
+                                    <p class="getText">Tether BEP20</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto13-usdcoin.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto13-usdcoin.png">
+                                    </picture>
+                                    <p class="getText">USDCoin TRC20</p>
+                                </li>
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto13-usdcoin.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto13-usdcoin.png">
+                                    </picture>
+                                    <p class="getText">USDCoin ERC20</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto14-trueusd.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto14-trueusd.png">
+                                    </picture>
+                                    <p class="getText">TrueUSD ERC20</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto14-trueusd.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto14-trueusd.png">
+                                    </picture>
+                                    <p class="getText">TrueUSD TRC20</p>
+                                </li>
+
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto15-eosio.svg">
+                                    <p class="getText">EOS</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto16-cardano.svg">
+                                    <p class="getText">Cardano</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto-stellar.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto-stellar.png">
+                                    </picture>
+                                    <p class="getText">Stellar</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto-waves.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto-waves.png">
+                                    </picture>
+                                    <p class="getText">Waves</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto-bnb.svg">
+                                    <p class="getText">BNB Bep2</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto-bnb.svg">
+                                    <p class="getText">BNB Bep20</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto17-cosmos.svg">
+                                    <p class="getText">Cosmos</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto18-tezos.svg">
+                                    <p class="getText">Tezos</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto19-polkadot.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto19-polkadot.png">
+                                    </picture>
+                                    <p class="getText">Polkadot</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto20-uniswap.svg">
+                                    <p class="getText">Uniswap</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/crypto21-ravencoin.webp" type="image/webp"><img
+                                            class="getImg" src="../images/crypto21-ravencoin.png">
+                                    </picture>
+                                    <p class="getText">Ravencoin</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto22-solana.svg">
+                                    <p class="getText">Solana</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto23-algorand.svg">
+                                    <p class="getText">Algorand</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/crypto24-avalanche.svg">
+                                    <p class="getText">Avalanche</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/bank1-sberbank.svg">
+                                    <p class="getText">Сбербанк</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/bank2-qiwi.svg">
+                                    <p class="getText">QIWI</p>
+                                </li>
+
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/bank3-tinkoff.svg">
+                                    <p class="getText">Тинькофф</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/bank4-yumoney.svg">
+                                    <p class="getText">ЮMoney</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank5-vtb.webp" type="image/webp"><img class="getImg"
+                                            src="../images/bank5-vtb.png">
+                                    </picture>
+                                    <p class="getText">ВТБ</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank6-mir.webp" type="image/webp"><img class="getImg"
+                                            src="../images/bank6-mir.png">
+                                    </picture>
+                                    <p class="getText">Карта Мир</p>
+                                </li>
+
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank7-sbp.webp" type="image/webp"><img class="getImg"
+                                            src="../images/bank7-sbp.png">
+                                    </picture>
+                                    <p class="getText">СБП</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank8-visa-mastercard.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank8-visa-mastercard.png">
+                                    </picture>
+                                    <p class="getText">Visa/MasterCard</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/bank9-rnkb.svg">
+                                    <p class="getText">РНКБ</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank10-alfa.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank10-alfa.png">
+                                    </picture>
+                                    <p class="getText">Альфа-Банк</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank11-raifasen.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank11-raifasen.png">
+                                    </picture>
+                                    <p class="getText">Райфайзен</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <img class="getImg" src="../images/bank3-tinkoff.svg">
+                                    <p class="getText">Тинькофф QR</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank12-psb.webp" type="image/webp"><img class="getImg"
+                                            src="../images/bank12-psb.png">
+                                    </picture>
+                                    <p class="getText">ПСБ</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank13-open.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank13-open.png">
+                                    </picture>
+                                    <p class="getText">Открытие</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank14-phone.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank14-phone.png">
+                                    </picture>
+                                    <p class="getText">Счет телефона</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank15-mts.webp" type="image/webp"><img class="getImg"
+                                            src="../images/bank15-mts.png">
+                                    </picture>
+                                    <p class="getText">МТС Банк</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank16-rosbank.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank16-rosbank.png">
+                                    </picture>
+                                    <p class="getText">Росбанк</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank17-gazprombank.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank17-gazprombank.png">
+                                    </picture>
+                                    <p class="getText">Газпромбанк</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank10-alfa.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank10-alfa.png">
+                                    </picture>
+                                    <p class="getText">Альфа cash-in</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank18-pochtabank.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank18-pochtabank.png">
+                                    </picture>
+                                    <p class="getText">Почта Банк</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank19-avangard.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank19-avangard.png">
+                                    </picture>
+                                    <p class="getText">Авангард</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/bank20-homecredit.webp" type="image/webp"><img
+                                            class="getImg" src="../images/bank20-homecredit.png">
+                                    </picture>
+                                    <p class="getText">Хоум Кредит</p>
+                                </li>
+
+                                <li class="optionget">
+                                    <picture>
+                                        <source srcset="../images/cash.webp" type="image/webp"><img class="getImg"
+                                            src="../images/cash.png">
+                                    </picture>
+                                    <p class="getText">Наличные</p>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                        <div class="hero__givemob__output">0.000012112</div>
+                    </div>
+                </div>
+
+                <div class="currency__wrap-slider">
+                    <div swiper class="currency__slider swiper">
+                        <div class="swiper-wrapper">
+                            <span class="swiper-slide">ВСЕ</span>
+                            <span class="swiper-slide">BTC</span>
+                            <span class="swiper-slide">ETH</span>
+                            <span class="swiper-slide">LTC</span>
+                            <span class="swiper-slide">XRP</span>
+                            <span class="swiper-slide">XMR</span>
+                            <span class="swiper-slide">DOGE</span>
+                            <span class="swiper-slide">MATIC</span>
+                            <span class="swiper-slide">DASH</span>
+                            <span class="swiper-slide">ZEC</span>
+                            <span class="swiper-slide">USDT</span>
+                            <span class="swiper-slide">USDC</span>
+                            <span class="swiper-slide">EOS</span>
+                            <span class="swiper-slide">ADA</span>
+                            <span class="swiper-slide">XRP</span>
+                            <span class="swiper-slide">DOT</span>
+                            <span class="swiper-slide">WAVES</span>
+                            <span class="swiper-slide">BNB</span>
+                            <span class="swiper-slide">TRX</span>
+                            <span class="swiper-slide">LINK</span>
+                            <span class="swiper-slide">ATOM</span>
+                            <span class="swiper-slide">XTZ</span>
+                            <span class="swiper-slide">UNI</span>
+                            <span class="swiper-slide">RVN</span>
+                            <span class="swiper-slide">SOL</span>
+                            <span class="swiper-slide">ALGO</span>
+                            <span class="swiper-slide">AVAX</span>
+                            <span class="swiper-slide">USD</span>
+                            <span class="swiper-slide">RUB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="currency__wrap-mobslider">
+                    <div swiper class="currency__slider swiper">
+                        <div class="swiper-wrapper">
+                            <span class="swiper-slide">ВСЕ</span>
+                            <span class="swiper-slide">BTC</span>
+                            <span class="swiper-slide">ETH</span>
+                            <span class="swiper-slide">LTC</span>
+                            <span class="swiper-slide">XRP</span>
+                            <span class="swiper-slide">XMR</span>
+                            <span class="swiper-slide">DOGE</span>
+                            <span class="swiper-slide">MATIC</span>
+                            <span class="swiper-slide">DASH</span>
+                            <span class="swiper-slide">ZEC</span>
+                            <span class="swiper-slide">USDT</span>
+                            <span class="swiper-slide">USDC</span>
+                            <span class="swiper-slide">EOS</span>
+                            <span class="swiper-slide">ADA</span>
+                            <span class="swiper-slide">XRP</span>
+                            <span class="swiper-slide">DOT</span>
+                            <span class="swiper-slide">WAVES</span>
+                            <span class="swiper-slide">BNB</span>
+                            <span class="swiper-slide">TRX</span>
+                            <span class="swiper-slide">LINK</span>
+                            <span class="swiper-slide">ATOM</span>
+                            <span class="swiper-slide">XTZ</span>
+                            <span class="swiper-slide">UNI</span>
+                            <span class="swiper-slide">RVN</span>
+                            <span class="swiper-slide">SOL</span>
+                            <span class="swiper-slide">ALGO</span>
+                            <span class="swiper-slide">AVAX</span>
+                            <span class="swiper-slide">USD</span>
+                            <span class="swiper-slide">RUB</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="hero__exchange-cryptos">
+                <div class="hero__give-cryptos">
+                    <h2 class="hero__crypto__smtitle">Криптовалюта</h2>
+                    <div class="hero__cryptos-wrap">
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Bitcoin</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto1-btc.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Bitcoin<br>Cash</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto2-btc-cash.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Ethereum</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto3-ethereum.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Ethereum Classic</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto4-ethereum-classic.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Litecoin</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto5-litecoin.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Ripple</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto6-ripple.webp" type="image/webp"><img
+                                        src="../images/crypto6-ripple.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Monero</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto7-monero.webp" type="image/webp"><img
+                                        src="../images/crypto7-monero.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Dogecoin</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto8-dodecoin.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Polygon</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto9-poligon.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Dash</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto10-dash.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Zcash</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto11-zcash.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Tether Omni</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                        src="../images/crypto12-tether.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Tether ERC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                        src="../images/crypto12-tether.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Tether TRC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                        src="../images/crypto12-tether.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Tether BEP20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                        src="../images/crypto12-tether.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">USDCoin ERC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto13-usdcoin.webp" type="image/webp"><img
+                                        src="../images/crypto13-usdcoin.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">USDCoin TRC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto13-usdcoin.webp" type="image/webp"><img
+                                        src="../images/crypto13-usdcoin.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">TrueUSD ERC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto14-trueusd.webp" type="image/webp"><img
+                                        src="../images/crypto14-trueusd.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">TrueUSD TRC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto14-trueusd.webp" type="image/webp"><img
+                                        src="../images/crypto14-trueusd.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">EOS</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto15-eosio.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Cardano</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto16-cardano.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Stellar</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto-stellar.webp" type="image/webp"><img
+                                        src="../images/crypto-stellar.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">TRON</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto-tron.webp" type="image/webp"><img
+                                        src="../images/crypto-tron.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Waves</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto-waves.webp" type="image/webp"><img
+                                        src="../images/crypto-waves.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">BNB Bep2</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto-bnb.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">BNB Bep20</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto-bnb.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Chainlink</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto-chainlink.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Cosmos</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto17-cosmos.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Tezos</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto18-tezos.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Polkadot</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto19-polkadot.webp" type="image/webp"><img
+                                        src="../images/crypto19-polkadot.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Uniswap</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto20-uniswap.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Ravencoin</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto21-ravencoin.webp" type="image/webp"><img
+                                        src="../images/crypto21-ravencoin.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Solana</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto22-solana.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Algorand</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto23-algorand.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item give__currency">
+                            <h5 class="hero__crypto-name">Avalanche</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto24-avalanche.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero__get-cryptos">
+                    <h2 class="hero__crypto__smtitle">Криптовалюта</h2>
+                    <div class="hero__cryptos-wrap">
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Bitcoin</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto1-btc.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">
+                                Bitcoin<br>
+                                Cash
+                            </h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto2-btc-cash.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Ethereum</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto3-ethereum.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Ethereum Classic</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto4-ethereum-classic.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Litecoin</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto5-litecoin.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Ripple</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto6-ripple.webp" type="image/webp"><img
+                                        src="../images/crypto6-ripple.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Monero</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto7-monero.webp" type="image/webp"><img
+                                        src="../images/crypto7-monero.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Dogecoin</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto8-dodecoin.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Polygon</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto9-poligon.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Dash</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto10-dash.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Zcash</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto11-zcash.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Tether Omni</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                        src="../images/crypto12-tether.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Tether ERC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                        src="../images/crypto12-tether.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Tether TRC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                        src="../images/crypto12-tether.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Tether BEP20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto12-tether.webp" type="image/webp"><img
+                                        src="../images/crypto12-tether.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">USDCoin ERC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto13-usdcoin.webp" type="image/webp"><img
+                                        src="../images/crypto13-usdcoin.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">USDCoin TRC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto13-usdcoin.webp" type="image/webp"><img
+                                        src="../images/crypto13-usdcoin.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">TrueUSD ERC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto14-trueusd.webp" type="image/webp"><img
+                                        src="../images/crypto14-trueusd.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">TrueUSD TRC20</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto14-trueusd.webp" type="image/webp"><img
+                                        src="../images/crypto14-trueusd.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">EOS</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto15-eosio.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Cardano</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto16-cardano.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Stellar</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto-stellar.webp" type="image/webp"><img
+                                        src="../images/crypto-stellar.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">TRON</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto-tron.webp" type="image/webp"><img
+                                        src="../images/crypto-tron.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Waves</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto-waves.webp" type="image/webp"><img
+                                        src="../images/crypto-waves.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">BNB Bep2</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto-bnb.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">BNB Bep20</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto-bnb.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Chainlink</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto-chainlink.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Cosmos</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto17-cosmos.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Tezos</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto18-tezos.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Polkadot</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto19-polkadot.webp" type="image/webp"><img
+                                        src="../images/crypto19-polkadot.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Uniswap</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto20-uniswap.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Ravencoin</h5>
+                            <div class="hero__crypto-img">
+                                <picture>
+                                    <source srcset="../images/crypto21-ravencoin.webp" type="image/webp"><img
+                                        src="../images/crypto21-ravencoin.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Solana</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto22-solana.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Algorand</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto23-algorand.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="hero__crypto-item get__currency">
+                            <h5 class="hero__crypto-name">Avalanche</h5>
+                            <div class="hero__crypto-img">
+                                <img src="../images/crypto24-avalanche.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero__exchange-banks">
+                <div class="hero__give-banks">
+                    <h2 class="hero__bank__smtitle">Банк</h2>
+                    <div class="hero__banks">
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Сбербанк</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank1-sberbank.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">QIWI</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank2-qiwi.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Тинькофф</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank3-tinkoff.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">ЮMoney</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank4-yumoney.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">ВТБ</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank5-vtb.webp" type="image/webp"><img
+                                        src="../images/bank5-vtb.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Карта Мир</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank6-mir.webp" type="image/webp"><img
+                                        src="../images/bank6-mir.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">СБП</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank7-sbp.webp" type="image/webp"><img
+                                        src="../images/bank7-sbp.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Visa / MasterCard</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank8-visa-mastercard.webp" type="image/webp"><img
+                                        src="../images/bank8-visa-mastercard.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">РНКБ</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank9-rnkb.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Альфа-Банк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank10-alfa.webp" type="image/webp"><img
+                                        src="../images/bank10-alfa.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Райфайзен</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank11-raifasen.webp" type="image/webp"><img
+                                        src="../images/bank11-raifasen.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Тинькофф QR</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank3-tinkoff.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">ПСБ</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank12-psb.webp" type="image/webp"><img
+                                        src="../images/bank12-psb.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Открытие</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank13-open.webp" type="image/webp"><img
+                                        src="../images/bank13-open.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Счет телефона</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank14-phone.webp" type="image/webp"><img
+                                        src="../images/bank14-phone.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">МТС Банк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank15-mts.webp" type="image/webp"><img
+                                        src="../images/bank15-mts.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Росбанк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank16-rosbank.webp" type="image/webp"><img
+                                        src="../images/bank16-rosbank.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Газпромбанк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank17-gazprombank.webp" type="image/webp"><img
+                                        src="../images/bank17-gazprombank.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Альфа cash-in</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank10-alfa.webp" type="image/webp"><img
+                                        src="../images/bank10-alfa.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Почта Банк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank18-pochtabank.webp" type="image/webp"><img
+                                        src="../images/bank18-pochtabank.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Авангард</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank19-avangard.webp" type="image/webp"><img
+                                        src="../images/bank19-avangard.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="give__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Хоум Кредит</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank20-homecredit.webp" type="image/webp"><img
+                                        src="../images/bank20-homecredit.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero__get-banks">
+                    <h2 class="hero__bank__smtitle">Банк</h2>
+                    <div class="hero__banks">
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Сбербанк</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank1-sberbank.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">QIWI</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank2-qiwi.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Тинькофф</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank3-tinkoff.svg" alt="">
+                            </div>
+                        </div>
+
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">ЮMoney</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank4-yumoney.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">ВТБ</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank5-vtb.webp" type="image/webp"><img
+                                        src="../images/bank5-vtb.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Карта Мир</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank6-mir.webp" type="image/webp"><img
+                                        src="../images/bank6-mir.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">СБП</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank7-sbp.webp" type="image/webp"><img
+                                        src="../images/bank7-sbp.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Visa / MasterCard</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank8-visa-mastercard.webp" type="image/webp"><img
+                                        src="../images/bank8-visa-mastercard.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">РНКБ</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank9-rnkb.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Альфа-Банк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank10-alfa.webp" type="image/webp"><img
+                                        src="../images/bank10-alfa.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Райфайзен</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank11-raifasen.webp" type="image/webp"><img
+                                        src="../images/bank11-raifasen.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Тинькофф QR</h5>
+                            <div class="hero__bank-img">
+                                <img src="../images/bank3-tinkoff.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">ПСБ</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank12-psb.webp" type="image/webp"><img
+                                        src="../images/bank12-psb.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Открытие</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank13-open.webp" type="image/webp"><img
+                                        src="../images/bank13-open.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Счет телефона</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank14-phone.webp" type="image/webp"><img
+                                        src="../images/bank14-phone.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">МТС Банк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank15-mts.webp" type="image/webp"><img
+                                        src="../images/bank15-mts.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Росбанк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank16-rosbank.webp" type="image/webp"><img
+                                        src="../images/bank16-rosbank.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Газпромбанк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank17-gazprombank.webp" type="image/webp"><img
+                                        src="../images/bank17-gazprombank.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Альфа cash-in</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank10-alfa.webp" type="image/webp"><img
+                                        src="../images/bank10-alfa.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Почта Банк</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank18-pochtabank.webp" type="image/webp"><img
+                                        src="../images/bank18-pochtabank.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Авангард</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank19-avangard.webp" type="image/webp"><img
+                                        src="../images/bank19-avangard.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                        <div class="get__currency hero__bank-item">
+                            <h5 class="hero__bank-name">Хоум Кредит</h5>
+                            <div class="hero__bank-img">
+                                <picture>
+                                    <source srcset="../images/bank20-homecredit.webp" type="image/webp"><img
+                                        src="../images/bank20-homecredit.png" alt="">
+                                </picture>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero__exchange-cash">
+                <div class="hero__give-cash">
+                    <h2 class="hero__cash__smtitle">Наличные</h2>
+                    <div class="hero__cashes">
+                        <div class="give__currency hero__cash-item">
+                            <h5 class="hero__cash-name">Наличные</h5>
+                            <div class="hero__cash-img">
+                                <picture>
+                                    <source srcset="../images/cash.webp" type="image/webp"><img src="../images/cash.png"
+                                        alt="">
+                                </picture>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero__get-cash">
+                    <h2 class="hero__cash__smtitle">Наличные</h2>
+                    <div class="hero__cashes">
+                        <div class="get__currency hero__cash-item">
+                            <h5 class="hero__cash-name">Наличные</h5>
+                            <div class="hero__cash-img">
+                                <picture>
+                                    <source srcset="../images/cash.webp" type="image/webp"><img src="../images/cash.png"
+                                        alt="">
+                                </picture>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exchange">
+                <div class="exchange__wrap">
+                    <h3 class="exchange__smtitle">Обмен</h3>
+                    <div class="exchange__timer">Kурс актуален: <span>00:23</span></div>
+                </div>
+                <form class="exchange__form">
+                    <div class="exchange__row">
+                        <div class="exchange__give">
+                            <div class="exchange__subtitle">{% trans "Отдаете" %}</div>
+                            <div class="exchange__wrap-input input-container">
+                                {% render_field form.sum_from class="exchange__input" placeholder="Введите сумму" type="number" value="300" %}
+                                <div class="exchange__type-currency">
+                                    <img class="exchange__input-img" src="../images/bank1-sberbank.svg" alt="bitcoin">
+
+                                    <p class="exchange__input-currency">RUB</p>
+                                </div>
+                            </div>
+                            <div class="exchange__rate">{% trans "Резерв:" %} <span>6 953 522 RUB</span></div>
+                        </div>
+                        <div class="exchange__get">
+                            <div class="exchange__subtitle">{% trans "Получаете" %}</div>
+                            <div class="exchange__wrap-output input-container">
+                                {% render_field form.sum_to class="exchange__output" placeholder="Получаете" type="number" value="0.00010553" %}
+                                <div class="exchange__type-currency">
+                                    <div class="exchange__currency-imgwrap">
+                                        <img class="exchange__output-img" src="../images/crypto1-btc.svg" alt="bitcoin">
+                                    </div>
+                                    <p class="exchange__output-currency">BTC</p>
+                                </div>
+                            </div>
+                            <div class="exchange__rate">
+                                {% trans "Курс обмена:" %} <span>1 BTC = 2521055.62 RUB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="exchange__form__smtitle">Введите данные для обмена</h3>
+
+                    <div class="exchange__form-row">
+                        <input class="exchange__input-text" placeholder="ФИО отправителя" type="text">
+                        {% render_field form.exchange_to_account class="exchange__input-text" placeholder="Bitcoin кошелёк от 28 до 36 символов" type="text" %}
+                    </div>
+                    <div class="exchange__form-row">
+                        <input class="exchange__input-text" placeholder="Карта Тинькофф, от 16 до 18 цифр" type="text">
+                        {% render_field form.email class="exchange__input-text" placeholder="Email" type="email" %}
+                    </div>
+                    <div class="exchange__checkbox-wrap">
+                        <input type="checkbox" id="exchange-checkbox">
+
+                        <label for="exchange-checkbox"></label>
+                        <label class="exchange__text" for="exchange-checkbox">
+                            {% trans "Нажимая «обменять» я соглашаюсь с" %}
+                            <a href="{% url 'tos' %}">правилами обмена</a>
+                            {% trans "и политикой" %}
+                            <a href="{% url 'amlkqc' %}">AML/KYC</a>
+                        </label>
+                    </div>
+
+
+                    <button class="exchange__fill-boxbtn" onclick="document.getElementById('submit_button').click()">
+                        {% trans "Обменять" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="homereview">
+        <div class="homereview__container">
+            <h4 class="homereview__mtitle">Отзывы</h4>
+            <div class="homereview__slider">
+                {% for review in reviews %}
+                <div class="homereview__item">
+                    <div class="homereview__item-name"> {% if review.user.name %} {{review.user.name}} {% else %}
+                        {{review.user.email}} {% endif %}</div>
+                    <img src="./images/stars.svg" alt="">
+                    <p class="homereview__item-mtext">
+                        {{ review.translations|trans_field:'text' }}
+                    </p>
+                    <div class="homereview__item-date">
+                        {% strdate_change_format review.created_at '%Y-%m-%dT%H:%M:%S.%f%z' '%d %B %Y, %H:%M' %}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="forum">
+        <div class="forum__container">
+            <h4 class="forum__mtitle">Мы на мониторингах и форумах</h4>
+            <div class="forum__slider">
+
+                <div class="forum__item">
+                    <div class="forum__img-wrap">
+                        <img src="../images/binance-logo.svg" alt="">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
+</form>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'bsite/js/main_exchange.js' %}"></script>
+{% endblock %}

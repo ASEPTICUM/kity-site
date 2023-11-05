@@ -1,0 +1,137 @@
+{% extends 'bsite/base.html' %}
+{% load i18n %}
+{% load static %}
+{% load bsite_tags %}
+{% block content %}
+<form action="{% url 'top_up_balance' %}" name="exchange_form" method="post">
+    {% csrf_token %}
+    {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+    {{ exchange_options|json_script:"exchange_options" }}
+    {{ wallets|json_script:"wallets" }}
+    {{ order_types|json_script:"order_types" }}
+    <section>
+        {% if wallets %}
+            {% include "bsite/wallets.html" with wallets=wallets %}
+        {% endif %}
+        <div class="container container--small">
+            {% include "bsite/messages.html" %}
+            {% if form.non_field_errors %}
+                {% error_message form.non_field_errors %}
+            {% endif %}
+
+            <div class="container margin-bottom">
+                <p class="exchange_type__title">
+                    {% trans 'Пополнение кошелька' %}
+                </p>
+            </div>
+
+            <div class="trade">
+                <h1 class="margin-bottom">{% trans "Отдаете" %}</h1>
+                <div class="trade__field from_trade__field">
+                    <div class="trade__contentField">
+                        <div class="input-container">
+                            {{ form.sum_from }}
+                            <div class="input-placeholder">{% trans "Отдаете" %}</div>
+                        </div>
+                        <div class="trade__buttonContainer">
+                            <button class="trade__fieldButton from_button yellow-button">
+                                <span class="trade__iconCurrency">
+
+                                </span>
+                                <span class="trade__nameCurrency"></span>
+                                <img src="{% static 'bsite/img/Dropdown-black.svg' %}">
+                            </button>
+                            <ul class="trade__listCurrency listCurrency listCurrencyFrom">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="trade-info">
+                        <div class="trade-infoBlock">
+                            min: <span class="trade-infoBlock-min">5526</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="trade__changeButton yellow-button">
+                    <svg width="12" height="17" viewBox="0 0 12 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.98396 1C6.98396 0.44772 7.43166 0 7.98396 0C8.34136 0 8.65496 0.18749 8.83176 0.46947L11.5194 3.15709C11.91 3.54761 11.91 4.18078 11.5194 4.5713C11.1289 4.96183 10.4957 4.96183 10.1052 4.5713L8.98396 3.45008V11.0001C8.98396 11.5523 8.53626 12.0001 7.98396 12.0001C7.43166 12.0001 6.98396 11.5523 6.98396 11.0001V1.04945C6.98386 1.04033 6.98386 1.03121 6.98396 1.02209V1Z"/>
+                        <path d="M5.01584 15.0148C5.01584 15.5671 4.56814 16.0148 4.01584 16.0148C3.65844 16.0148 3.34484 15.8274 3.16801 15.5454L0.48039 12.8578C0.08987 12.4672 0.08987 11.8341 0.48039 11.4435C0.87092 11.053 1.50408 11.053 1.89461 11.4435L3.01583 12.5648V5.01489C3.01583 4.4626 3.46355 4.01489 4.01584 4.01489C4.56814 4.01489 5.01584 4.4626 5.01584 5.01489V14.9654C5.01594 14.9745 5.01594 14.9836 5.01584 14.9928V15.0148Z"/>
+                    </svg>
+                </button>
+                <div class="trade__field to_trade__field">
+                    <h1 class="margin-bottom">{% trans "Получаете на свой кошелёк BPAY" %}</h1>
+                    <div class="trade__contentField">
+                        <div class="input-container">
+                            {{ form.sum_to }}
+                            <div class="input-placeholder">{% trans "Получаете" %}</div>
+                        </div>
+                        <div class="trade__buttonContainer">
+                            <button class="trade__fieldButton to_button yellow-button">
+                                <span class="trade__iconCurrency"></span>
+                                <span class="trade__nameCurrency"></span>
+                                <img src="{% static 'bsite/img/Dropdown-black.svg' %}">
+                            </button>
+                            <ul class="trade__listCurrency listCurrency listCurrencyTo"></ul>
+                        </div>
+                    </div>
+                    <div class="trade-info">
+                        <div class="trade-infoBlock">
+                            min: <span>5526</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="margin-bottom margin-top">
+                    <div class="text">{% trans "Создавая заявку вы соглашаетесь с" %} <a href="{% url 'tos' %}" class="underline"
+                                                                           target="_blank">
+                        {% trans "условиями и правилами сервиса" %}</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="margin-top-x2">
+        <div class="container">
+            <div class="request">
+                <div class="request__step">
+                    <div class="request__subtitle">{% trans "Отдаете" %}</div>
+                    <div class="request__info">
+                        <span class="request__from_sum">0</span>
+                        <span class="request__from_cur">BTC</span>
+                    </div>
+                </div>
+                <img class="request__narrow" src="{% static 'bsite/img/arrow-narrow-right.svg' %}">
+                <div class="request__step">
+                    <div class="request__subtitle">{% trans "Получаете" %}</div>
+                    <div class="request__info">
+                        <span class="request__to_sum">0</span>
+                        <span class="request__to_cur">RUB</span>
+
+                    </div>
+                </div>
+                <div class="request__courseBlock">
+                    <div class="request__courseBlockTitle">{% trans "по курсу" %}</div>
+                    <div class="request__courseBlockInfo">
+                        1 421 731.57 ₽ <span class="grey">=</span> 1 BTC</span>
+                    </div>
+                </div>
+                <input type="submit" style="display: none" id="submit_button">
+
+                </input>
+                <button class="request__button yellow-button" onclick="document.getElementById('submit_button').click()">
+                    {% trans "Создать заявку" %}
+                    <svg width="25" height="16" viewBox="0 0 25 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.5 4L21.5 8.5M21.5 8.5L17.5 13M21.5 8.5H3.5" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'bsite/js/exchange.js' %}"></script> 
+{% endblock %}

@@ -1,0 +1,24 @@
+{% load i18n %}
+
+<div class="wallets container margin-bottom">
+    <div class="wallets__inner">
+        <div class="wallets_info">
+            <h3 class="wallets_info__title">
+                {% trans 'Ваш внутренний кошелёк' %}
+            </h3>
+            <div class="wallets_info__options">
+                <a href="{% url 'top_up_balance' %}" class="wallets_info__options_option">Пополнить</a>
+                /
+                <a href="{% url 'withdrawal_balance' %}" class="wallets_info__options_option">Вывести</a>
+            </div>
+        </div>
+        <ul class="wallets_list">
+            {% for wallet in wallets %}
+                <li class="wallets_list_wallet">
+                    <h3 class="wallets_list_wallet__title" data-symbol="{{ wallet.currency.symbol }}">{{ wallet.currency.symbol }}</h3>
+                    <p class="wallets_list_wallet__amount" data-balance="{{ wallet.balance }}">{{ wallet.balance }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

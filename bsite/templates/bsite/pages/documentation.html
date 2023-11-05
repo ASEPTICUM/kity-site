@@ -1,0 +1,531 @@
+{%extends 'bsite/base.html'%}
+{%block content%}
+<div class="container container--large">
+    <div class="block-txt-title">
+        <h1 style="font-size: 32px;" class="title">Быстрый старт</h1>
+        <p class="txt">API BPAY позволяет принимать платежи онлайн. Данный раздел
+            поможет вам принять первый платеж.</p>
+        <p class="txt">Чтобы начать работать с BPAY API, вам потребуется секретный токен. Для
+            его получения, напишите нам с указанием причины и вскоре мы отправим его вам.</p>
+    </div>
+    <div class="block-txt">
+        <h1 class="title">Шаг 1. Создайте платёж</h1>
+        <p class="txt">Платеж — главная сущность API BPAY. Чтобы его создать, вам понадобятся сумма, которую получит
+            магазин, счёт магазина, на который придут средства, символ валюты, в которой пользователь оплатит заказ, символ валюты, котороой магазин получит
+            оплату и URL, на
+            который пользователь вернется после оплаты.</p>
+        <p class="txt">
+            Отправьте BPAY запрос и передайте в нём данные для создания платежа и ваш токен.
+        </p>
+        <p class="txt"><strong>Пример запроса на создание платежа</strong></p>
+        <div class="for-code">
+        <div class="hjoJQL language-bash"><code class="language-bash">
+<span>curl https://chngbot.ru/v1/payments \
+  -X POST \
+  -H 'Authorization: "your token"' \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "redirect_url": "https://google.com",
+        "exchange_from_currency": "BTC",
+        "exchange_to_currency": "RUB",
+        "order_receivable_amount": "10000",
+        "exchange_to_account": "123412341234"
+      }'
+</span></code><div class="iwvYci">
+                    <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div></div>
+        </div>
+    </div>
+    <div class="block-txt">
+        <h1 class="title">Шаг 2. Отправьте пользователя на страницу оплаты</h1>
+        <p class="txt">В теле ответа от BPAY вы получите созданный объект платежа в статусе new. Для оплаты
+            перенаправьте пользователя на <code class="ckbTNQ bXuBes">confirmation_url</code>.</p>
+        <div class="for-code">
+        <div class="hjoJQL language-bash"><code class="language-bash">
+<span>{
+    "id": 30,
+    "confirm_url": "https://chngbot.ru/confirm/Z0FBQUFBQmo0N09EeXRUTW9ndUVmZ0dGSEdTMzhFc3RwdHhXSkxPemFpcW1EZjJleTZrbi14TTVwQmQzTEdSWnVOenlka012QWZHWUFFNGNhRjVOWW5kN3lGblh2dmdwSEE9PQ==",
+    "redirect_url": "https://google.com",
+    "order_open_date": "2023-02-08T16:38:31.245453+03:00",
+    "order_pay_amount": "0.0060024",
+    "order_receivable_amount": "10000",
+    "value_currency": "1666000.0",
+    "exchange_from_account": "123",
+    "exchange_to_account": "1234",
+    "order_close_date": null,
+    "exchange_from_currency": "BTC",
+    "exchange_to_currency": "RUB",
+    "order_status": "new"
+}
+</span></code><div class="iwvYci">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div></div>
+
+        </div>
+        <p class="txt">После успешной оплаты BPAY вернет пользователя на <code class="ckbTNQ bXuBes">redirect_url</code>,
+            который вы передали при создании платежа.</p>
+    </div>
+    <div class="block-txt">
+        <h1 class="title">Шаг 3. Дождитесь успешного выполнения платежа</h1>
+        <p class="txt">Платеж можно считать успешным, как только он перешел в статус <code
+                class="ckbTNQ bXuBes">done</code>. Если пользователь
+            передумает платить или что-то пойдет не так, платеж перейдет в статус canceled.</p>
+        <p class="txt">Также вы можете следить за статусом, запрашивая информацию о платеже с удобной для вас
+            периодичностью (например, после того, как пользователь вернулся на <code
+                    class="ckbTNQ bXuBes">redirect_url</code>). Для этого вам понадобится
+            идентификатор платежа (значение параметра <code class="ckbTNQ bXuBes">id</code> в созданном объекте
+            платежа).</p>
+        <p class="txt"><strong>Ура, вы приняли первый платеж!</strong></p>
+    </div>
+    <div class="block-txt-title">
+        <h1 style="font-size: 32px;" class="title">Платежи</h1>
+        <p class="txt">Ниже будет подробнее об объекте платежа и его создании</p>
+        <div class="method-box">
+            <div class="box">
+                <div class="box-header">
+                    <p class="box-text">Список методов</p>
+                </div>
+                <div class="box-content">
+                    <div class="endpoints-row">
+                        <a class="row">
+                            <div class="row-content">
+                                <div class="column_1"><p class="box-text">GET</p></div>
+                                <div class="column_2"><p class="box-text">/payments/{payments_id}</p></div>
+                                <div class="column_3"><p class="box-text">Информация о платеже</p></div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="endpoints-row">
+                        <a class="row">
+                            <div class="row-content">
+                                <div class="column_1"><p class="box-text">POST</p></div>
+                                <div class="column_2"><p class="box-text">/payments/</p></div>
+                                <div class="column_3"><p class="box-text">Создание платежа</p></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block-txt">
+        <h1 class="title">Объект платежа</h1>
+        <p class="txt">Объект платежа содержит всю информацию о платеже, актуальную на текущий момент времени.
+            Он формируется при создании платежа и приходит в ответ на любой запрос, связанный с платежами.</p>
+        <div class="gUTTFG">
+            <div class="ioWkwH hCaeB">Описание параметров</div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>id</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">integer</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Идентфикатор по платежам.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>redirect_url</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Ссылка, куда перенаправят пользователя после оплаты.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>confirm_url</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Ссылка, ссылка куда нужно перенаправить пользователя, для подтврждня оплаты.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>order_open_date</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">datatime</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Время создания заказа.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>order_pay_amount</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Сумма платежа, которую должен заплатить пользователь.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>order_receivable_amount</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Сумма, которую получит магазин.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>exchange_from_currency</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Валюта, который пользователь оплачивает.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>exchange_to_currency</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Валюта, которую получит магазин.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>exchange_from_account</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Счёт, с которого пользователь переводит сумму</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>exchange_to_account</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Счёт/кошелёк, на который придут средства</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>order_status</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Статус заказа. Возможные значения: <code class="bXuBes">new</code>, <code
+                        class="bXuBes">done</code>, <code class="bXuBes">canceled</code>, <code
+                        class="bXuBes">paid</code>, <code class="bXuBes">overdue</code>.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>order_close_date</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">datatime</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Дата закрытия заказа. Устанавливается после получения объектом платежа статуса done</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+        </div>
+        <p class="txt"><strong>Пример объекта платежа</strong></p>
+        <div class="for-code">
+        <div class="hjoJQL language-bash"><code class="language-bash">
+<span>{
+    "id": 30,
+    "confirm_url": "https://chngbot.ru/confirm/Z0FBQUFBQmo0N09EeXRUTW9ndUVmZ0dGSEdTMzhFc3RwdHhXSkxPemFpcW1EZjJleTZrbi14TTVwQmQzTEdSWnVOenlka012QWZHWUFFNGNhRjVOWW5kN3lGblh2dmdwSEE9PQ==",
+    "redirect_url": "https://google.com",
+    "order_open_date": "2023-02-08T16:38:31.245453+03:00",
+    "order_pay_amount": "0.0060024",
+    "order_receivable_amount": "10000",
+    "value_currency": "1666000.0",
+    "exchange_from_account": "123",
+    "exchange_to_account": "1234",
+    "order_close_date": null,
+    "exchange_from_currency": "BTC",
+    "exchange_to_currency": "RUB",
+    "order_status": "new"
+}
+</span></code><div class="iwvYci">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div></div>
+        </div>
+    </div>
+    <div class="block-txt">
+        <h1 class="title">Создание платежа</h1>
+        <p class="txt">Чтобы принять оплату, необходимо создать объект платежа — Payment. Он содержит всю необходимую
+            информацию для проведения оплаты (сумму, валюту и статус). У платежа линейный жизненный цикл, он
+            последовательно переходит из статуса в статус.</p>
+            <div class="gUTTFG">
+            <div class="ioWkwH hCaeB">Описание параметров</div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>redirect_url</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Ссылка, куда пользователя перенаправит после оплаты.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>exchange_from_currency</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Валюта, которой пользователь оплачивает заказ.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>exchange_to_currency</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Валюта, которую получит магазин.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>order_receivable_amount</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Сумма, которую получит магазин.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+            <div class="ldMEFK">
+                <div>
+                    <div class="dxKaiR cVna-Dn">
+                        <div>
+                            <div class="evPseH">
+                                <div class="hJUXob"></div>
+                                <div class="iJSVuH"><span>exchange_to_account</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fELInp">string</div>
+                </div>
+            </div>
+            <div class="ldMEFK">
+                <span>Номер счёта/кошелька, на который придут средства.</span>
+            </div>
+            <div class="jGJThW line-between"></div>
+        </div>
+        <p class="txt"><strong>Пример запроса</strong></p>
+        <div class="for-code">
+        <pre class="hjoJQL language-bash"><code class="language-bash">
+<span>curl https://chngbot.ru/v1/payments \
+  -X POST \
+  -H 'Authorization: "your token"' \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "redirect_url": "https://google.com",
+        "exchange_from_currency": "BTC",
+        "exchange_to_currency": "RUB",
+        "order_receivable_amount": "10000",
+        "exchange_to_account": "123412341234"
+      }'
+</span></code></pre>
+            <div class="iwvYci">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <div class="block-txt">
+        <h1 class="title">OpenApi</h1>
+        <p class="txt">Вы также можете получить данные об апи в OpenApi формате для генерации кода.</p>
+        <p class="txt"><strong>Запрос на получине openapi</strong></p>
+        <div class="for-code">
+        <div class="hjoJQL language-bash"><code class="language-bash">
+<span>curl https://chngbot.ru/v1/openapi \
+  -X POST \
+  -H 'Authorization: "your token"' \
+  -H 'Content-Type: application/json' \
+</span></code><div class="iwvYci">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div></div>
+        </div>
+    </div>
+    </div>
+</div>
+{%endblock content%}

@@ -1,0 +1,74 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+{% load widget_tweaks %}
+
+{% block title %}
+<title>{% title 'custom' "Регистрация" %}</title>
+{% endblock %}
+
+{% block content %}
+
+<!--
+    <section>
+        <div class="container container--small">
+            <h1 class="margin-bottom">{% trans "Регистрация" %}</h1>
+            {% if form.non_field_errors %}
+            {% error_message form.non_field_errors %}
+            {% endif %}
+            {% include "bsite/messages.html" %}
+            <form action="{% url 'register' %}" method="post">
+                {% csrf_token %}
+                <div class="input-container margin-bottom">
+                    {{ form.email }}
+                    <div class="input-placeholder">{% trans "Ваш email" %}</div>
+                </div>
+                <div class="input-container margin-bottom">
+                    {{ form.password1 }}
+                    <div class="input-placeholder">{% trans "Ваш пароль" %}</div>
+                </div>
+                <div class="input-container margin-bottom">
+                    {{ form.password2 }}
+                    <div class="input-placeholder">{% trans "Пароль еще раз" %}</div>
+                </div>
+                <div class="margin-bottom">
+                    <div class="form-group f-center g-recaptcha" data-sitekey="{{recaptcha_site_key}}"></div>
+                </div>
+                <div class="margin-top-x2">
+                    <button class="yellow-button center" type="submit">{% trans "Зарегистрироваться" %}</button>
+                </div>
+            </form>
+        </div>
+    </section>
+-->
+
+<section class="signup">
+    <div class="signup__container">
+        <h4 class="signup__mtitle">{% trans "Регистрация" %}</h4>
+        <form class="signup__form" action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            <span id="signUp_emailError" class="error"></span>
+            {% render_field form.email class="signup__input-text" type="text" id="signup_email" placeholder="Email" %}
+            <span id="signUp_passwordError" class="error"></span>
+            {% render_field form.password1 class="signup__input-text" type="password" id="signup_password" placeholder="Пароль" %}
+            <span id="confirmPasswError" class="error"></span>
+            {% render_field form.password2 class="signup__input-text" type="password" id="signup_confirm-password" placeholder="Подтвердить пароль" %}
+
+            <div class="signup__checkbox-wrap">
+                <input type="checkbox" id="signup-checkbox">
+
+                <label for="signup-checkbox"></label>
+                <div class="signup__text">
+                    Нажимая на кнопку "Зарегистрироваться" я соглашаюсь
+                    <a href="{% url 'tos' %}">c правилами сервиса</a>
+                </div>
+            </div>
+
+            <button type="submit" class="signup__fill-boxbtn">{% trans "Зарегистрироваться" %}</button>
+        </form>
+    </div>
+</section>
+
+
+{% endblock %}

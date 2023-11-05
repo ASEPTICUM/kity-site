@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bpay-site-deployment-{{ .Release.Name }}
+  labels:
+    app: bpay-site-{{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bpay-site-{{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: bpay-site-{{ .Release.Name }}
+    spec:
+      containers:
+      - name: bpay-site-{{ .Release.Name }}
+        image: {{ .Values.image }}
+        ports:
+        - containerPort: 8000
+        env:
+          - name: ALLOWED_HOSTS
+            value: "{{ join "," .Values.allowedHosts }}"
+          - name: DEBUG
+            value: "{{ .Values.debug }}"
+          - name: BPAY_API_URL
+            value: "{{ .Values.bpayApiUrl }}"

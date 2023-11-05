@@ -1,0 +1,19 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load bsite_tags %}
+{% load i18n %}
+{% block title %}
+    <title>{% title 'custom' "Заявка успешно выполнена!" %}</title>
+{% endblock %}
+{% block content %}
+    <section>
+        <div class="container container--small">
+            <div class="data-block">
+                <h1 class="margin-bottom green-color"><img class="title-icon" src="{% static 'bsite/img/success.svg' %}" />{% trans "Заявка успешно выполнена!" %}</h1>
+                <div class="data-block__textInfo">
+                    {% trans "Благодарим Вас за выбор и доверие! Мы будем очень признательны, если Вы подарите нам честный отзыв, о работе нашего сервиса, у партнера" %} <a href="https://BestChange.ru" target="_blank">BestChange</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

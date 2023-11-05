@@ -1,0 +1,68 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+
+{% block title %}
+    <title>{% title 'custom' "О проекте" %}</title>
+{% endblock %}
+
+{% block content %}
+<section class="margin-bottom">
+    <div class="container">
+        <h1 class="margin-bottom">{{ aboutproject.title }}</h1>
+        <div class="steps">
+            <div class="steps__step">
+                <div class="steps__number">1</div>
+                <div class="steps__title">{{ aboutproject.step_1 }}</div>
+            </div>
+            <div class="steps__step">
+                <div class="steps__number">2</div>
+                <div class="steps__title">{{ aboutproject.step_2 }}</div>
+            </div>
+            <div class="steps__step">
+                <div class="steps__number">3</div>
+                <div class="steps__title">{{ aboutproject.step_3 }}</div>
+            </div>
+        </div>
+    </div>
+    </section>
+    <section>
+    <div class="container">
+        <div class="features">
+            <div class="margin-bottom features__title">
+                <h1>{{ aboutproject.features|safe }}</h1>
+            </div>
+            <div class="features__block margin-bottom">
+                <div class="features__img"><img src="{% static 'bsite/img/features-img.png' %}"></div>
+                <div class="features__list">
+                    <div class="features__feature feature">
+                        <div class="feature__img"><img src="{% static 'bsite/img/features-icon-1.svg' %}"></div>
+                        <div class="feature__title">{{ aboutproject.features_title_1 }}</div>
+                        <p class="feature__text">{{ aboutproject.features_text_1 }}</p>
+                    </div>
+                    <div class="features__feature feature">
+                        <div class="feature__img"><img src="{% static 'bsite/img/features-icon-2.svg' %}"></div>
+                        <div class="feature__title">{{ aboutproject.features_title_2 }}</div>
+                        <p class="feature__text">{{ aboutproject.features_text_2 }}</p>
+                    </div>
+                    <div class="features__feature feature">
+                        <div class="feature__img"><img src="{% static 'bsite/img/features-icon-3.svg' %}"></div>
+                        <div class="feature__title">{{ aboutproject.features_title_3 }}</div>
+                        <p class="feature__text">{{ aboutproject.features_text_3 }}</p>
+                    </div>
+                    <div class="features__feature feature">
+                        <div class="feature__img"><img src="{% static 'bsite/img/features-icon-4.svg' %}"></div>
+                        <div class="feature__title">{{ aboutproject.features_title_4 }}</div>
+                        <p class="feature__text">{{ aboutproject.features_text_4 }}</p>
+                    </div>
+                </div>
+            </div>
+            <p class="features__text">
+                {{ aboutproject.features_2 }}
+            </p>
+        </div>
+    </div>
+    </section>
+    
+{% endblock %}

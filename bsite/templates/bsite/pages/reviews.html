@@ -1,0 +1,78 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+
+{% block title %}
+<title>{% title 'custom' "Отзывы" %}</title>
+{% endblock %}
+
+{% block content %}
+
+<!-- old stuff
+    <section class="margin-bottom-x2">
+        {% include "bsite/messages.html" %}
+        <div class="container">
+            <h1 class="margin-bottom">{% trans "Отзывы" %}</h1>
+            <div class="margin-bottom-x2">
+                {% for review in reviews %}
+                <div class="review margin-bottom">
+                    <div class="review__data">
+                        <div class="review__userData">
+                            {% if review.mark == 'like' %}
+                            <div class="review__profile review__profile--like">
+                                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M11 0h1v3l3 7v8a2 2 0 0 1-2 2H5c-1.1 0-2.31-.84-2.7-1.88L0 12v-2a2 2 0 0 1 2-2h7V2a2 2 0 0 1 2-2zm6 10h3v10h-3V10z" />
+                                </svg>
+                            </div>
+                            {% elif review.mark == 'dislike' %}
+                            <div class="review__profile review__profile--dislike">
+                                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M11 0h1v3l3 7v8a2 2 0 0 1-2 2H5c-1.1 0-2.31-.84-2.7-1.88L0 12v-2a2 2 0 0 1 2-2h7V2a2 2 0 0 1 2-2zm6 10h3v10h-3V10z" />
+                                </svg>
+                            </div>
+                            {% endif %}
+                            <div>{% if review.user.name %} {{review.user.name}} {% else %} {{review.user.email}} {% endif %}
+                            </div>
+                            {% if review.user.ip %}
+                            <div>{{ review.user.ip|truncatechars:7 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="review__date">
+                            {% strdate_change_format review.created_at '%Y-%m-%dT%H:%M:%S.%f%z' '%d %B %Y, %H:%M' %}
+                        </div>
+                    </div>
+                    <p class="review__text">
+                        {{ review.translations|trans_field:'text' }}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="yellow-button center">{% trans "Больше отзывов на BestChange" %}</button>
+        </div>
+    </section>
+-->
+
+<section class="review">
+    <div class="review__container">
+        <h3 class="review__mtitle">{% trans "Отзывы" %}</h3>
+        <div class="review__items">
+            {% for review in reviews %}
+            <div class="review__item">
+                <div class="review__item-name">
+                    {% if review.user.name %} {{review.user.name}} {% else %} {{review.user.email}} {% endif %}
+                </div>
+                <img src="./images/stars.svg" alt="">
+                <p class="review__item-mtext">{{ review.translations|trans_field:'text' }} </p>
+                <div class="review__item-date">
+                    {% strdate_change_format review.created_at '%Y-%m-%dT%H:%M:%S.%f%z' '%d %B %Y, %H:%M' %}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

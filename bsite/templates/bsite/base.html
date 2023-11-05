@@ -1,0 +1,53 @@
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .loaded {
+            opacity: 1
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% description %}
+    {% block meta_update %}{% endblock %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css?_v=20231022214039">
+    <link rel="stylesheet" href="{% static 'bsite/css/new.style.min.css' %}">
+    <link rel="icon" href="{% static 'bsite/favicon.svg' %}" type=" image/svg+xml">
+    {% block title %}
+    <title>{% title %}</title>
+    {% endblock %}
+</head>
+
+<body>
+    {% include "bsite/header.html" %}
+    <main>
+        {% block content %}{% endblock %}
+        <!--{% include "bsite/tgbanner.html" %}-->
+    </main>
+    {% include "bsite/footer.html" %}
+
+    <!-- old scripts -->
+    <script src="https://www.google.com/recaptcha/api.js?hl={{LANGUAGE_CODE}}"></script>
+    <script src="{% static 'bsite/js/decimal.js' %}"></script>
+    <script src="{% static 'bsite/js/utils.js' %}"></script>
+    <script src="{% static 'bsite/js/header.js' %}"></script>
+    <script src="{% static 'bsite/js/style.js' %}"></script>
+    <script src="{% static 'bsite/js/style.js' %}"></script>
+
+    <!-- new scripts -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js?_v=20231022214039"></script>
+    <script type="text/javascript"
+        src="//cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick.min.js?_v=20231022214039"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js?_v=20231022214039"></script>
+    <script src="{% static 'bsite/js/new.app.min.js' %}"></script>
+    {% block extra_scripts %} {% endblock %}
+</body>
+
+</html>

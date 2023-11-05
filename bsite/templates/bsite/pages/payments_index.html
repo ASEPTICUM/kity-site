@@ -1,0 +1,65 @@
+{% extends 'bsite/base.html' %}
+{% load i18n %}
+{% load static %}
+{% load bsite_tags %}
+{% block content %}
+<form action="{% url 'confirm' confirm_id%}" method="post">
+    {% csrf_token %}
+    {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+    <section>
+        <div class="container container--small">
+            {% include "bsite/messages.html" %}
+            {% if form.non_field_errors %}
+                {% error_message form.non_field_errors %}
+            {% endif %}
+            <div>
+                <h1 class="margin-bottom margin-top">{% trans "Ваши данные" %}</h1>
+                <div class="input-container margin-bottom">
+                    {{ form.email }}
+                    <div class="input-placeholder">{% trans "Ваш email" %}</div>
+                </div>
+                <div class="input-container margin-bottom">
+                    {{ form.exchange_from_account }}
+                    <div class="input-placeholder">{% trans "Номер счета/кошелька" %}</div>
+                </div>
+                <div class="margin-bottom">
+                    <div class="text">{% trans "Создавая заявку вы соглашаетесь с" %} <a href="{% url 'tos' %}" class="underline"
+                                                                           target="_blank">
+                        {% trans "условиями и правилами сервиса" %}</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="margin-top-x2">
+        <div class="container">
+            <div class="request">
+                <div class="request__step">
+                    <div class="request__subtitle">{% trans "Отдаете" %}</div>
+                    <div class="request__info">
+                        <span class="request__from_sum">{{payment.order_pay_amount}}</span>
+                        <span class="request__from_cur">{{payment.exchange_from_currency}}</span>
+                    </div>
+                </div>
+                <img class="request__narrow" src="{% static 'bsite/img/arrow-narrow-right.svg' %}">
+                <div class="request__step">
+                    <div class="request__subtitle">{% trans "Получаете" %}</div>
+                    <div class="request__info">
+                        <span class="request__to_sum">{{payment.order_receivable_amount}}</span>
+                        <span class="request__to_cur">{{payment.exchange_to_currency}}</span>
+
+                    </div>
+                </div>
+                <button type="submit" class="request__button yellow-button">
+                    {% trans "Создать заявку" %}
+                    <svg width="25" height="16" viewBox="0 0 25 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.5 4L21.5 8.5M21.5 8.5L17.5 13M21.5 8.5H3.5" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+</form>
+{% endblock %}

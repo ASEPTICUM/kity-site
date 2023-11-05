@@ -1,0 +1,42 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+
+{% block title %}
+    <title>{% title 'custom' "Обратная связь" %}</title>
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container container--small">
+            {% if form.non_field_errors %}
+                {% error_message form.non_field_errors %}
+            {% endif %}
+            {% include 'bsite/messages.html' %}
+            <form action="{% url 'request' %}" method="post">
+                {% csrf_token %}
+                <h1 class="margin-bottom">{% trans "Обратная связь" %}</h1>
+                <div class="input-container margin-bottom">
+                    {{ form.mail }}
+                    <div class="input-placeholder">{% trans "Ваш email" %}</div>
+                </div>
+                <div class="input-container margin-bottom">
+                    {{ form.text }}
+                    <div class="input-placeholder input-placeholder-textarea">{% trans "Текст сообщения" %}</div>
+                </div>
+                {% if not user_token %}
+                    <div class="margin-bottom">
+                        <div class="form-group f-center g-recaptcha" data-sitekey="{{recaptcha_site_key}}"></div>
+                    </div>
+                {% endif %}
+                <div class="margin-bottom">
+                    <div class="text">{% trans "Создавая заявку вы соглашаетесь с" %} <a href="{% url 'tos' %}" class="underline"
+                                                                           target="_blank">
+                        {% trans "условиями и правилами сервиса" %}</a></div>
+                </div>
+                <button type="submit" class="margin-top-x2 yellow-button center">{% trans "Отправить сообщение" %}</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

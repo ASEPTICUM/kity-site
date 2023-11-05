@@ -1,0 +1,54 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+
+{% block title %}
+<title>{% title 'custom' "Частые вопросы" %}</title>
+{% endblock %}
+
+{% block content %}
+
+<!-- old stuff
+    <section>
+        <div class="container">
+            <h1 class="margin-bottom">{% trans "Частые вопросы" %}</h1>
+            {% include "bsite/messages.html" %}
+            <div class="margin-bottom-x2">
+                <div class="spoilers">
+                    {% for question in questions %}
+                    <div class="spoiler">
+                        <div class="spoiler__touch">
+                            <div class="spoiler__icon"><span></span></div>
+                            <div class="spoiler__title">{{ question.translations|trans_field:'question' }}</div>
+                        </div>
+                        <div class="spoiler__container">
+                            <div class="spoiler__text">
+                                {{ question.translations|trans_field:'answer' }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+-->
+
+<section class="faq">
+    {% include "bsite/messages.html" %}
+    <div class="faq__akkordion">
+        {% for question in questions %}
+        <div class="faq__akkordion__item">
+            <div class="faq__akkordion__header">{{ question.translations|trans_field:'question' }}</div>
+            <div class="faq__akkordion__content">
+                <p class="faq-mtext">
+                    {{ question.translations|trans_field:'answer' }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

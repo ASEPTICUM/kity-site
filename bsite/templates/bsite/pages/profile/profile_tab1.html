@@ -1,0 +1,127 @@
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+
+<!--
+    <div data-tabbody="profile-1" class="profile-tab MiTab-item  active">
+        {% for order in orders %}
+        <div onclick="document.location.pathname = '{% url 'exchange' order.order_id %}'" class="madeRequest margin-bottom">
+            <div class="madeRequest__data">
+                <div class="madeRequest__subBlock">
+                    <div class="madeRequest__number miniText">{% trans "Номер заявки" %}
+                        <a href="{% url 'exchange' order.order_id %}"><span>{{order.order.identifier}}</span></a>
+                    </div>
+                    <div class="madeRequest__exchange">
+                        <span>{% trans "Отдаете" %}</span> {{order.order.order_pay_amount}} {{order.currency_from.symbol}}
+                        <div class="madeRequest__narrow"><img src="{% static 'bsite/img/arrow-narrow-right.svg'%}"></div>
+                        <span>{% trans "Получаете" %}</span> {{order.order.order_receivable_amount}}
+                        {{order.currency_to.symbol}}
+                    </div>
+                    <div class="madeRequest__course miniText">{% trans "по курсу" %} <span>{{order.from_rate}}
+                            {{order.from_rate_symbol}}</span> = <span>{{order.to_rate}} {{order.to_rate_symbol}}</span>
+                    </div>
+                </div>
+                <div class="madeRequest__subBlock">
+                    <div class="madeRequest__status {{order.status_class}}">
+                        {{ order.status.translations|trans_field:'name' }}
+                    </div>
+                    <div class="madeRequest__date">
+                        {% strdate_change_format order.order.order_open_date '%Y-%m-%dT%H:%M:%S.%f%z' '%d %B %Y, %H:%M' %}
+                    </div>
+                </div>
+            </div>
+            <div class="madeRequest__fields">
+                {% if order.order.exchange_from_account %}
+                <div class="input-container">
+                    <input class="field field--grey" readonly type="text" value="{{order.order.exchange_from_account}}">
+                    <div class="input-placeholder">{% trans "Номер счета/кошелька отправителя" %}</div>
+                </div>
+                {% endif %}
+                {% if order.order.exchange_to_account %}
+                <div class="input-container">
+                    <input class="field field--grey" readonly type="text" value="{{order.order.exchange_to_account}}">
+                    <div class="input-placeholder">{% trans "Номер счета/кошелька получателя" %}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% if paginator.has_other_pages %}
+        <div class="bpay-order-paginator">
+            <ul class="pagination">
+                {% for i in paginator.paginator.page_range %}
+                {% if paginator.number == i %}
+                <li class="active"><span>{{ i }}</span></li>
+                {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+-->
+
+<div class="profile__orders show">
+    {% if order %}
+    {% for order in orders %}
+    <div class="profile__order">
+        <div class="profile__order__header">{% trans "Номер заявки" %}</div>
+        <div class="profile__order__content order-mtext">
+            <a href="{% url 'exchange' order.order_id %}"><span>{{order.order.identifier}}</span></a>
+
+            <div class="madeRequest__exchange">
+                <span>{% trans "Отдаете" %}</span> {{order.order.order_pay_amount}} {{order.currency_from.symbol}}
+                <div class="madeRequest__narrow"><img src="{% static 'bsite/img/arrow-narrow-right.svg'%}"></div>
+                <span>{% trans "Получаете" %}</span> {{order.order.order_receivable_amount}}
+                {{order.currency_to.symbol}}
+            </div>
+
+            <div class="madeRequest__course miniText">{% trans "по курсу" %} <span>{{order.from_rate}}
+                    {{order.from_rate_symbol}}</span> = <span>{{order.to_rate}} {{order.to_rate_symbol}}</span>
+            </div>
+
+            <div class="madeRequest__status {{order.status_class}}">
+                {{ order.status.translations|trans_field:'name' }}
+            </div>
+            <div class="madeRequest__date">
+                {% strdate_change_format order.order.order_open_date '%Y-%m-%dT%H:%M:%S.%f%z' '%d %B %Y, %H:%M' %}
+            </div>
+
+            <div class="madeRequest__fields">
+                {% if order.order.exchange_from_account %}
+                <div class="input-container">
+                    <input class="field field--grey" readonly type="text" value="{{order.order.exchange_from_account}}">
+                    <div class="input-placeholder">{% trans "Номер счета/кошелька отправителя" %}</div>
+                </div>
+                {% endif %}
+                {% if order.order.exchange_to_account %}
+                <div class="input-container">
+                    <input class="field field--grey" readonly type="text" value="{{order.order.exchange_to_account}}">
+                    <div class="input-placeholder">{% trans "Номер счета/кошелька получателя" %}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="profile__order">
+        <div class="profile__order__header">Заявок пока нет</div>
+    </div>
+    {% endif %}
+    {% if paginator.has_other_pages %}
+    <div class="bpay-order-paginator">
+        <ul class="pagination">
+            {% for i in paginator.paginator.page_range %}
+            {% if paginator.number == i %}
+            <li class="active"><span>{{ i }}</span></li>
+            {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>

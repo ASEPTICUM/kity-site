@@ -1,0 +1,24 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load bsite_tags %}
+{% load i18n %}
+{% block meta_update %}
+    <meta http-equiv="Refresh" content="30">
+{% endblock %}
+
+{% block title %}
+    <title>{% title 'custom' "Ваша заявка в работе!" %}</title>
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container container--small">
+            <div class="data-block">
+                <h1 class="margin-bottom"><img class="title-icon" src="{% static 'bsite/img/waiting-icon.svg' %}" />{% trans "Ваша заявка в работе" %}</h1>
+                <div class="data-block__textInfo text-center">
+                    {% trans "Вам больше ничего не нужно делать! Страница обновится автоматически!" %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

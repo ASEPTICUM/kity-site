@@ -1,0 +1,22 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+
+{% block title %}
+    <title>{% title 'custom' "Заявка отменена!" %}</title>
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container container--small">
+            <div class="data-block">
+                <h1 class="margin-bottom">{% trans "Заявка отменена!" %}</h1>
+                <div class="data-block__textInfo">
+                    {% trans "Вы создали заявку, но платёж к нам пока не поступил, либо находится на проверке у платёжной системы или банка. Заявка временно перемещена в удалённые.
+                    Если оплата прошла то обратитесь к службе поддержки сайта, напишите номер Вашей заявки и предоставьте квитанцию об успешной оплате." %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

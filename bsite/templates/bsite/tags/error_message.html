@@ -1,0 +1,20 @@
+<div class="message message--error margin-bottom">
+    <div class="message__icon">
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M18.031 19.5454C19.5717 19.5454 20.5338 17.8767 19.7619 16.5434L14.2308 6.98963C13.4604 5.65906 11.5394 5.65906 10.7691 6.98963L5.23796 16.5434C4.46603 17.8767 5.42815 19.5454 6.96881 19.5454H18.031ZM11.6817 17.0909V15.4545H13.3181V17.0909H11.6817ZM11.6817 13.8182V10.5454H13.3181V13.8182H11.6817Z"
+                  fill="#FFE2E2"/>
+            <mask id="mask0_1_7170" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="4" y="5"
+                  width="17" height="15">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M18.031 19.5454C19.5717 19.5454 20.5338 17.8767 19.7619 16.5434L14.2308 6.98963C13.4604 5.65906 11.5394 5.65906 10.7691 6.98963L5.23796 16.5434C4.46603 17.8767 5.42815 19.5454 6.96881 19.5454H18.031ZM11.6817 17.0909V15.4545H13.3181V17.0909H11.6817ZM11.6817 13.8182V10.5454H13.3181V13.8182H11.6817Z"
+                      fill="white"/>
+            </mask>
+            <g mask="url(#mask0_1_7170)">
+                <rect x="0.5" width="24" height="24"/>
+            </g>
+        </svg>
+    </div>
+    <div class="message__text">{{ message }}</div>
+    <div class="message__close" onclick="this.closest('.message').remove()"><span></span></div>
+</div>

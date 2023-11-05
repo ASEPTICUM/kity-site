@@ -1,0 +1,6 @@
+image: bpay_site:0.0.1b
+allowedHosts:
+  - '194.35.119.234'
+  - 'chngbot.ru'
+debug: true
+bpayApiUrl: 'https://chngbot.ru/api/v1'

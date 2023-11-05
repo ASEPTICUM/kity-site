@@ -1,0 +1,82 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+{% block meta_update %}
+    <meta http-equiv="Refresh" content="{{overdue_time_sec}}">
+{% endblock %}
+{% block title %}
+    <title>{% title 'custom' "Заявка ожидает оплаты" %}</title>
+{% endblock %}
+
+{% block content %}
+<section>
+    <div class="container container--small">
+        <h1 class="margin-bottom">{% trans "Отдаете" %}</h1>
+        <div class="input-container margin-bottom">
+            <input readonly class="field field--grey" type="text"
+                   value="{{order.order_pay_amount}} {{order.from_currency.symbol}}">
+            <div class="input-placeholder">{{order.from_currency.name}}</div>
+        </div>
+        <h1 class="margin-bottom">{% trans "Получаете" %}</h1>
+        <div class="input-container margin-bottom">
+            <input readonly class="field field--grey" type="text"
+                   value="{{order.order_receivable_amount}} {{order.to_currency.symbol}}">
+            <div class="input-placeholder">{{order.to_currency.name}}</div>
+        </div>
+        <div class="trade-info margin-bottom">
+            <div class="trade-infoBlock center">
+                {% trans "по курсу" %} <span>{{order.rate_from_str}}</span> = <span>{{order.rate_to_str}}</span>
+            </div>
+        </div>
+        <h1 class="margin-bottom">{% trans "Ваши данные" %}</h1>
+        <div class="input-container margin-bottom">
+            <input readonly class="field field--grey" type="text" value="{{order.id}}">
+            <div class="input-placeholder">{% trans "Номер заявки" %}</div>
+        </div>
+        <div class="input-container margin-bottom">
+            <input readonly class="field field--grey" type="text"
+                   value="{% strdate_change_format order.order_open_date '%Y-%m-%dT%H:%M:%S.%f%z' '%d.%m.%Y - %H:%M' %}">
+            <div class="input-placeholder">{% trans "Дата создания" %}</div>
+        </div>
+        <div class="input-container margin-bottom">
+            <input disabled class="field field--grey" type="text" value="{{order.exchange_from_account}}">
+            <div class="input-placeholder">{% trans "Номер счета" %}</div>
+        </div>
+        <h1 class="margin-bottom">{% trans "Успейте оплатить заявку" %} <span class="timer">{{overdue_time_m_s.min}}:{{overdue_time_m_s.sec}}</span></h1>
+        <div class="data-block">
+            <div class="margin-bottom data-block__container">
+                <div class="big-text">{% trans "Отправьте" %} <span>{{order.order_pay_amount}} {{order.from_currency.symbol}}</span>
+                </div>
+                <div class="copy-button" data-copy-value="{{order.order_pay_amount}}"
+                     data-text-after-copy='{% trans "Скопировано" %}'>
+                    <svg class="copy-button-icon" width="25" height="24" viewBox="0 0 25 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21.5 0H11C9.34531 0 8 1.34297 8 3V13.5C8 15.157 9.34297 16.5 11 16.5H21.5C23.157 16.5 24.5 15.157 24.5 13.5V3C24.5 1.34297 23.1547 0 21.5 0ZM22.25 13.5C22.25 13.9135 21.9135 14.25 21.5 14.25H11C10.5875 14.25 10.25 13.9125 10.25 13.5V3C10.25 2.58647 10.5865 2.25 11 2.25H21.5C21.9135 2.25 22.25 2.58647 22.25 3V13.5ZM14.75 21C14.75 21.4135 14.4135 21.75 14 21.75H3.5C3.08647 21.75 2.75 21.4135 2.75 21V10.5C2.75 10.0865 3.08647 9.75 3.5 9.75H6.5V7.5H3.5C1.84297 7.5 0.5 8.84531 0.5 10.5V21C0.5 22.657 1.84297 24 3.5 24H14C15.657 24 17 22.657 17 21V18H14.75V21Z"/>
+                    </svg>
+                    <span>{% trans "Скопировать" %}</span>
+                </div>
+            </div>
+            <div class="margin-bottom data-block__container">
+                <div class="data-block__miniText">{% trans "На счет/кошелек" %} <span>{{order.exchange_to_account}}</span></div>
+                <div data-copy-value="{{order.from_currency.requisites}}" class="copy-button"
+                     data-text-after-copy='{% trans "Скопировано" %}'>
+                    <svg class="copy-button-icon" width="25" height="24" viewBox="0 0 25 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21.5 0H11C9.34531 0 8 1.34297 8 3V13.5C8 15.157 9.34297 16.5 11 16.5H21.5C23.157 16.5 24.5 15.157 24.5 13.5V3C24.5 1.34297 23.1547 0 21.5 0ZM22.25 13.5C22.25 13.9135 21.9135 14.25 21.5 14.25H11C10.5875 14.25 10.25 13.9125 10.25 13.5V3C10.25 2.58647 10.5865 2.25 11 2.25H21.5C21.9135 2.25 22.25 2.58647 22.25 3V13.5ZM14.75 21C14.75 21.4135 14.4135 21.75 14 21.75H3.5C3.08647 21.75 2.75 21.4135 2.75 21V10.5C2.75 10.0865 3.08647 9.75 3.5 9.75H6.5V7.5H3.5C1.84297 7.5 0.5 8.84531 0.5 10.5V21C0.5 22.657 1.84297 24 3.5 24H14C15.657 24 17 22.657 17 21V18H14.75V21Z"/>
+                    </svg>
+                    <span>{% trans "Скопировать" %}</span>
+                </div>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                <button class="yellow-button yellow-button--big">{% trans "Я оплатил заявку" %}</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

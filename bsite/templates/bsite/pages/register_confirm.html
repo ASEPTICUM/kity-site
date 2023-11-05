@@ -1,0 +1,19 @@
+{% extends 'bsite/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load bsite_tags %}
+
+{% block title %}
+    <title>{% title 'custom' "Завершение регистрации" %}</title>
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container">
+            <h1 class="margin-bottom">{% trans "Завершение регистрации" %}</h1>
+            <h1 class="margin-bottom-x2">
+                {% trans "Для продолжения перейдите по ссылке отправленной на email, который вы указали при регистрации." %}
+            </h1>
+        </div>
+    </section>
+{% endblock %}
